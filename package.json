@@ -29,6 +29,7 @@
     "prebuild:clean": "npx expo prebuild --clean"
   },
   "dependencies": {
+    "@expo-google-fonts/noto-sans-jp": "^0.4.0",
     "@expo-google-fonts/space-grotesk": "^0.2.2",
     "@expo/metro-runtime": "~4.0.0",
     "@react-navigation/bottom-tabs": "^7.2.0",

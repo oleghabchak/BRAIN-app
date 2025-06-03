@@ -93,22 +93,7 @@ export interface ButtonProps extends PressableProps {
  * />
  */
 export function Button(props: ButtonProps) {
-  const {
-    tx,
-    text,
-    txOptions,
-    style: $viewStyleOverride,
-    pressedStyle: $pressedViewStyleOverride,
-    textStyle: $textStyleOverride,
-    pressedTextStyle: $pressedTextStyleOverride,
-    disabledTextStyle: $disabledTextStyleOverride,
-    children,
-    RightAccessory,
-    LeftAccessory,
-    disabled,
-    disabledStyle: $disabledViewStyleOverride,
-    ...rest
-  } = props;
+  const { tx, text, txOptions, style: $viewStyleOverride, pressedStyle: $pressedViewStyleOverride, textStyle: $textStyleOverride, pressedTextStyle: $pressedTextStyleOverride, disabledTextStyle: $disabledTextStyleOverride, children, RightAccessory, LeftAccessory, disabled, disabledStyle: $disabledViewStyleOverride, ...rest } = props;
 
   const { themed } = useAppTheme();
 
@@ -119,12 +104,7 @@ export function Button(props: ButtonProps) {
    * @returns {StyleProp<ViewStyle>} The view style based on the pressed state.
    */
   function $viewStyle({ pressed }: PressableStateCallbackType): StyleProp<ViewStyle> {
-    return [
-      themed($viewPresets[preset]),
-      $viewStyleOverride,
-      !!pressed && themed([$pressedViewPresets[preset], $pressedViewStyleOverride]),
-      !!disabled && themed([$disabledViewPresets[preset], $disabledTextStyleOverride]),
-    ];
+    return [themed($viewPresets[preset]), $viewStyleOverride, !!pressed && themed([$pressedViewPresets[preset], $pressedViewStyleOverride]), !!disabled && themed([$disabledViewPresets[preset], $disabledTextStyleOverride])];
   }
   /**
    * @param {PressableStateCallbackType} root0 - The root object containing the pressed state.
@@ -132,22 +112,11 @@ export function Button(props: ButtonProps) {
    * @returns {StyleProp<TextStyle>} The text style based on the pressed state.
    */
   function $textStyle({ pressed }: PressableStateCallbackType): StyleProp<TextStyle> {
-    return [
-      themed($textPresets[preset]),
-      $textStyleOverride,
-      !!pressed && themed([$pressedTextPresets[preset], $pressedTextStyleOverride]),
-      !!disabled && themed([$disabledTextPresets[preset], $disabledTextStyleOverride]),
-    ];
+    return [themed($textPresets[preset]), $textStyleOverride, !!pressed && themed([$pressedTextPresets[preset], $pressedTextStyleOverride]), !!disabled && themed([$disabledTextPresets[preset], $disabledTextStyleOverride])];
   }
 
   return (
-    <Pressable
-      style={$viewStyle}
-      accessibilityRole="button"
-      accessibilityState={{ disabled: !!disabled }}
-      {...rest}
-      disabled={disabled}
-    >
+    <Pressable style={$viewStyle} accessibilityRole='button' accessibilityState={{ disabled: !!disabled }} {...rest} disabled={disabled}>
       {(state) => (
         <>
           {!!LeftAccessory && <LeftAccessory style={$leftAccessoryStyle} pressableState={state} disabled={disabled} />}
@@ -156,9 +125,7 @@ export function Button(props: ButtonProps) {
             {children}
           </Text>
 
-          {!!RightAccessory && (
-            <RightAccessory style={$rightAccessoryStyle} pressableState={state} disabled={disabled} />
-          )}
+          {!!RightAccessory && <RightAccessory style={$rightAccessoryStyle} pressableState={state} disabled={disabled} />}
         </>
       )}
     </Pressable>

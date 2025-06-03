@@ -33,8 +33,24 @@ const palette = {
   accent400: "#FBC878",
   accent500: "#FFBB50",
 
-  angry100: "#F2D6CD",
-  angry500: "#FF616D",
+  error_light: "#FFE2E5",
+  error_medium: "#FF616D",
+  error_dark: "#ED3241",
+
+  success_light: "#E7F4E8",
+  success_medium: "#3AC0A0",
+  success_dark: "#298267",
+
+  green50: "#E1FEF0",
+  green100: "#CFFCE5",
+  green200: "#9EFACC",
+  green300: "#6EF7B2",
+  green400: "#10D48E",
+  green500: "#47EB99",
+  green600: "#33CC7F",
+  green700: "#29A366",
+  green800: "#26734C",
+  green900: "#1F4733",
 
   overlay20: "rgba(25, 16, 21, 0.2)",
   overlay50: "rgba(25, 16, 21, 0.5)",
@@ -82,9 +98,9 @@ export const colors = {
   /**
    * Error messages.
    */
-  error: palette.angry500,
+  error: palette.error_medium,
   /**
    * Error Background.
    */
-  errorBackground: palette.angry100,
+  errorBackground: palette.error_light,
 } as const;

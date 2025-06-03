@@ -1,31 +1,32 @@
 // TODO: write documentation about fonts and typography along with guides on how to add custom fonts in own
 // markdown file and add links from here
 
-import { Platform } from "react-native"
+import { Platform } from "react-native";
+
 import {
-  SpaceGrotesk_300Light as spaceGroteskLight,
-  SpaceGrotesk_400Regular as spaceGroteskRegular,
-  SpaceGrotesk_500Medium as spaceGroteskMedium,
-  SpaceGrotesk_600SemiBold as spaceGroteskSemiBold,
-  SpaceGrotesk_700Bold as spaceGroteskBold,
-} from "@expo-google-fonts/space-grotesk"
+  NotoSansJP_300Light as notoSansJPLight,
+  NotoSansJP_400Regular as notoSansJPRegular,
+  NotoSansJP_500Medium as notoSansJPMedium,
+  NotoSansJP_600SemiBold as notoSansJPSemiBold,
+  NotoSansJP_700Bold as notoSansJPBold,
+} from "@expo-google-fonts/noto-sans-jp";
 
 export const customFontsToLoad = {
-  spaceGroteskLight,
-  spaceGroteskRegular,
-  spaceGroteskMedium,
-  spaceGroteskSemiBold,
-  spaceGroteskBold,
-}
+  notoSansJPLight,
+  notoSansJPRegular,
+  notoSansJPMedium,
+  notoSansJPSemiBold,
+  notoSansJPBold,
+};
 
 const fonts = {
-  spaceGrotesk: {
+  notoSansJP: {
     // Cross-platform Google font.
-    light: "spaceGroteskLight",
-    normal: "spaceGroteskRegular",
-    medium: "spaceGroteskMedium",
-    semiBold: "spaceGroteskSemiBold",
-    bold: "spaceGroteskBold",
+    light: "notoSansJPLight",
+    normal: "notoSansJPRegular",
+    medium: "notoSansJPMedium",
+    semiBold: "notoSansJPSemiBold",
+    bold: "notoSansJPBold",
   },
   helveticaNeue: {
     // iOS only font.
@@ -49,7 +50,7 @@ const fonts = {
     // Android only font.
     normal: "monospace",
   },
-}
+};
 
 export const typography = {
   /**
@@ -59,7 +60,7 @@ export const typography = {
   /**
    * The primary font. Used in most places.
    */
-  primary: fonts.spaceGrotesk,
+  primary: fonts.notoSansJP,
   /**
    * An alternate font used for perhaps titles and stuff.
    */
@@ -68,4 +69,4 @@ export const typography = {
    * Lets get fancy with a monospace font!
    */
   code: Platform.select({ ios: fonts.courier, android: fonts.monospace }),
-}
+};

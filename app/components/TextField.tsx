@@ -139,17 +139,16 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
   const getBorderColor = () => {
     if (status === "error") return colors.error;
     if (disabled) return colors.palette.neutral400;
-    return isFocused || textValue ? colors.palette.primary500 : colors.palette.neutral600;
+    return isFocused || TextInputProps.value ? colors.palette.primary500 : colors.palette.neutral600;
   };
 
   const getTextColor = () => {
     if (status === "error") return colors.error;
     if (disabled) return colors.palette.neutral400;
-    return !isFocused && textValue ? colors.palette.primary500 : colors.palette.neutral900;
+    return !isFocused && TextInputProps.value ? colors.palette.primary500 : colors.palette.neutral900;
   };
 
   const [isFocused, setIsFocused] = useState(false);
-  const [textValue, setTextValue] = useState("");
 
   const disabled = TextInputProps.editable === false || status === "disabled";
 
@@ -177,7 +176,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
     { color: getTextColor() },
   ];
 
-  const $helperStyles = [$helperStyle, status === "error" && { color: colors.error }, HelperTextProps?.style];
+  const $helperStyles = [$helperStyle, { color: colors.error }, HelperTextProps?.style];
 
   function focusInput() {
     if (disabled) return;
@@ -223,9 +222,6 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
           }}
           onBlur={(e) => {
             setIsFocused(false);
-          }}
-          onChange={(e) => {
-            setTextValue(e.nativeEvent.text);
           }}
         />
 
