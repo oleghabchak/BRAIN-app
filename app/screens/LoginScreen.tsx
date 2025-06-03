@@ -1,13 +1,12 @@
 import { ComponentType, FC, useEffect, useMemo, useRef, useState } from "react";
-// eslint-disable-next-line no-restricted-imports
-import { TextInput, TextStyle, ViewStyle } from "react-native";
+import { TextInput, TextStyle, View, ViewStyle } from "react-native";
 import { observer } from "mobx-react-lite";
-
 import { Button, PressableIcon, Screen, Text, TextField, TextFieldAccessoryProps } from "@/components";
 import { useStores } from "@/models";
 import { AppStackScreenProps } from "@/navigators";
 import type { ThemedStyle } from "@/theme";
 import { useAppTheme } from "@/utils/useAppTheme";
+import ProfileIcon from "@assets/icons/profile_icon.svg";
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
@@ -63,7 +62,10 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
   return (
     <Screen preset="auto" contentContainerStyle={themed($screenContentContainer)} safeAreaEdges={["top", "bottom"]}>
-      <Text testID="login-heading" tx="loginScreen:logIn" preset="heading" style={themed($logIn)} />
+      <View style={themed($logIn)}>
+        <Text testID="login-heading" tx="loginScreen:logIn" preset="heading" />
+        <ProfileIcon width={30} height={30} />
+      </View>
       <Text tx="loginScreen:enterDetails" preset="subheading" style={themed($enterDetails)} />
       {attemptsCount > 2 && <Text tx="loginScreen:hint" size="sm" weight="light" style={themed($hint)} />}
 
@@ -108,6 +110,9 @@ const $screenContentContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
 
 const $logIn: ThemedStyle<TextStyle> = ({ spacing }) => ({
   marginBottom: spacing.sm,
+  flexDirection: "row",
+  alignItems: "center",
+  columnGap: 10,
 });
 
 const $enterDetails: ThemedStyle<TextStyle> = ({ spacing }) => ({

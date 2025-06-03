@@ -273,6 +273,7 @@ const $inputStyle: ThemedStyle<ViewStyle> = ({ colors, typography, spacing }) =>
   paddingVertical: 0,
   paddingHorizontal: 0,
   marginVertical: spacing.xs,
+  marginTop: 6,
   marginHorizontal: spacing.sm,
 });
 
@@ -282,7 +283,7 @@ const $helperStyle: ThemedStyle<TextStyle> = ({ spacing }) => ({
 
 const $rightAccessoryStyle: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   marginEnd: spacing.xs,
-  height: 50,
+  height: 46,
   justifyContent: "center",
   alignItems: "center",
 });
