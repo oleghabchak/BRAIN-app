@@ -1,20 +1,25 @@
 const palette = {
-  neutral900: "#FFFFFF",
-  neutral800: "#F4F2F1",
-  neutral700: "#D7CEC9",
-  neutral600: "#B6ACA6",
-  neutral500: "#978F8A",
-  neutral400: "#564E4A",
-  neutral300: "#3C3836",
-  neutral200: "#191015",
-  neutral100: "#000000",
+  neutral50: "#FFFFFF",
+  neutral100: "#F8F9FE",
+  neutral200: "#E5E6EE",
+  neutral300: "#D4D6DD",
+  neutral400: "#C5C6CC",
+  neutral500: "#C3C5D2",
+  neutral600: "#898D9E",
+  neutral700: "#494A50",
+  neutral800: "#2F3036",
+  neutral900: "#1F2024",
 
-  primary600: "#F4E0D9",
-  primary500: "#E8C1B4",
-  primary400: "#DDA28E",
-  primary300: "#D28468",
-  primary200: "#C76542",
-  primary100: "#A54F31",
+  primary50: "#EBF0FF",
+  primary100: "#E1E8FE",
+  primary200: "#CFD9FC",
+  primary300: "#9EB3FA",
+  primary400: "#6E8EF7",
+  primary500: "#585CE5",
+  primary600: "#3356CC",
+  primary700: "#2945A3",
+  primary800: "#263873",
+  primary900: "#1F2847",
 
   secondary500: "#DCDDE9",
   secondary400: "#BCC0D6",
@@ -33,7 +38,7 @@ const palette = {
 
   overlay20: "rgba(25, 16, 21, 0.2)",
   overlay50: "rgba(25, 16, 21, 0.5)",
-} as const
+} as const;
 
 export const colors = {
   palette,

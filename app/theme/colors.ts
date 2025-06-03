@@ -1,20 +1,25 @@
 const palette = {
-  neutral100: "#FFFFFF",
-  neutral200: "#F4F2F1",
-  neutral300: "#D7CEC9",
-  neutral400: "#B6ACA6",
-  neutral500: "#978F8A",
-  neutral600: "#564E4A",
-  neutral700: "#3C3836",
-  neutral800: "#191015",
-  neutral900: "#000000",
+  neutral50: "#FFFFFF",
+  neutral100: "#F8F9FE",
+  neutral200: "#E5E6EE",
+  neutral300: "#D4D6DD",
+  neutral400: "#C5C6CC",
+  neutral500: "#C3C5D2",
+  neutral600: "#898D9E",
+  neutral700: "#494A50",
+  neutral800: "#2F3036",
+  neutral900: "#1F2024",
 
-  primary100: "#F4E0D9",
-  primary200: "#E8C1B4",
-  primary300: "#DDA28E",
-  primary400: "#D28468",
-  primary500: "#C76542",
-  primary600: "#A54F31",
+  primary50: "#EBF0FF",
+  primary100: "#E1E8FE",
+  primary200: "#CFD9FC",
+  primary300: "#9EB3FA",
+  primary400: "#6E8EF7",
+  primary500: "#585CE5",
+  primary600: "#3356CC",
+  primary700: "#2945A3",
+  primary800: "#263873",
+  primary900: "#1F2847",
 
   secondary100: "#DCDDE9",
   secondary200: "#BCC0D6",
@@ -29,11 +34,11 @@ const palette = {
   accent500: "#FFBB50",
 
   angry100: "#F2D6CD",
-  angry500: "#C03403",
+  angry500: "#FF616D",
 
   overlay20: "rgba(25, 16, 21, 0.2)",
   overlay50: "rgba(25, 16, 21, 0.5)",
-} as const
+} as const;
 
 export const colors = {
   /**
@@ -82,4 +87,4 @@ export const colors = {
    * Error Background.
    */
   errorBackground: palette.angry100,
-} as const
+} as const;
