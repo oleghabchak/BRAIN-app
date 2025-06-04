@@ -260,7 +260,7 @@ const $inputWrapperStyle: ThemedStyle<ViewStyle> = ({ colors }) => ({
   alignItems: "center",
   borderWidth: 1,
   borderRadius: 16,
-  backgroundColor: colors.palette.neutral200,
+  backgroundColor: colors.palette.neutral100,
   borderColor: colors.palette.neutral400,
   padding: 4,
   overflow: "hidden",

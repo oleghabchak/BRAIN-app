@@ -121,7 +121,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         <Button testID="login-button" style={themed($tapButton)} onPress={login} disabled={!authEmail || !authPassword}>
           Log in
         </Button>
-        <Button preset="outline" testID="login-button" style={themed($tapButton)} onPress={login}>
+        <Button preset="outline" testID="login-button" style={themed($tapButton)}>
           Switch to Sign up
         </Button>
         <TouchableOpacity style={{ width: "100%", alignItems: "center", marginTop: 20 }}>

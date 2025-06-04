@@ -229,8 +229,8 @@ const $pressedTextPresets: Record<Presets, ThemedStyle<TextStyle>> = {
 };
 
 const $disabledViewPresets: Record<Presets, ThemedStyle<ViewStyle>> = {
-  default: ({ colors }) => ({ backgroundColor: colors.palette.neutral400 }),
-  outline: ({ colors }) => ({ borderColor: colors.palette.neutral400 }),
+  default: ({ colors }) => ({ backgroundColor: colors.palette.neutral300 }),
+  outline: ({ colors }) => ({ borderColor: colors.palette.neutral300 }),
 };
 
 const $disabledTextPresets: Record<Presets, ThemedStyle<TextStyle>> = {
