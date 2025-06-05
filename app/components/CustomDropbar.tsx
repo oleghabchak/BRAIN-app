@@ -1,5 +1,4 @@
 import { TextStyle, View, TouchableOpacity, ViewStyle, FlatList } from "react-native";
-import { ListView } from "./ListView";
 import { ListItem } from "./ListItem";
 import { useState } from "react";
 import { Text } from "./Text";
@@ -7,16 +6,19 @@ import { useAppTheme } from "@/utils/useAppTheme";
 import { ThemedStyle } from "@/theme";
 import ArrowUpIcon from "@assets/icons/arrow-up.svg";
 import ArrowDownIcon from "@assets/icons/arrow-down.svg";
+import React from "react";
 
 interface CustomDropbarProps {
   title?: string;
   placeholder: string;
   options: string[];
+  value: string;
+  onChange: (text: string) => void;
 }
 
-export default function CustomDropbar({ title, placeholder, options }: CustomDropbarProps) {
+export default function CustomDropbar({ title, placeholder, options, value, onChange }: CustomDropbarProps) {
   const [isOpened, setIsOpened] = useState(false);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState(value);
   const {
     themed,
     theme: { colors },
@@ -25,6 +27,7 @@ export default function CustomDropbar({ title, placeholder, options }: CustomDro
   const toggleDropdown = () => setIsOpened((prev) => !prev);
   const onSelect = (item: string) => {
     setSelected(item);
+    onChange(item);
     setIsOpened(false);
   };
 
@@ -49,7 +52,7 @@ export default function CustomDropbar({ title, placeholder, options }: CustomDro
               { color: selected ? colors.palette.primary500 : colors.palette.neutral600 },
             ]}
           >
-            {selected ?? placeholder}
+            {selected ? selected : placeholder}
           </Text>
           {isOpened ? (
             <ArrowUpIcon

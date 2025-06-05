@@ -4,7 +4,7 @@ import { setToken, clearToken } from "@/services/api/client";
 import { LoginResponse, RegisterResponse } from "@/types/authResponse";
 import { AuthProps, AuthState } from "@/types/authContext";
 
-const AuthContext = createContext<Partial<AuthProps>>({});
+const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {
   return useContext(AuthContext);
@@ -18,8 +18,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const [userRegistrationInfo, setUserRegistrationInfo] = useState({
     name: "",
-    birth_date: "",
+    birth_date: new Date(),
     gender: "",
+    email: "",
+    password: "",
+    c_password: "",
+    step: 1,
   });
 
   useEffect(() => {
@@ -124,6 +128,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     onLogOut: logOut,
     authState,
     setAuthState,
+    userRegistrationInfo,
+    setUserRegistrationInfo,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

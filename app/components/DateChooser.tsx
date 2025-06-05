@@ -1,10 +1,10 @@
 import { TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 import React, { useState } from "react";
-import { Button } from "./Button";
 import DatePicker from "react-native-date-picker";
 import { Text } from "./Text";
 import { useAppTheme } from "@/utils/useAppTheme";
 import { ThemedStyle } from "@/theme";
+import { formatDate } from "@/utils/formatDate";
 
 type Mode = "date" | "time" | "datetime";
 
@@ -12,16 +12,15 @@ interface DatePickerProps {
   mode?: Mode;
   title: string;
   styles?: ViewStyle;
+  value: Date;
+  onChange: (date: Date) => void;
 }
 
-export default function DateChooser({ mode = "date", title, styles }: DatePickerProps) {
-  const [date, setDate] = useState(new Date());
+export default function DateChooser({ mode = "date", title, styles, value, onChange }: DatePickerProps) {
   const [open, setOpen] = useState(false);
   const { themed } = useAppTheme();
 
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = date.toLocaleString("en-US", { month: "long" });
-  const year = date.getFullYear().toString();
+  const { day, month, year } = formatDate(value);
 
   return (
     <View>
@@ -52,10 +51,10 @@ export default function DateChooser({ mode = "date", title, styles }: DatePicker
         modal
         mode={mode}
         open={open}
-        date={date}
+        date={value}
         onConfirm={(date) => {
           setOpen(false);
-          setDate(date);
+          onChange(date);
         }}
         onCancel={() => {
           setOpen(false);

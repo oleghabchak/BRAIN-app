@@ -5,6 +5,16 @@ export type AuthState = {
   token: string | null;
 };
 
+export type UserRegistrationInfo = {
+  name: string;
+  birth_date: Date;
+  gender: string;
+  email: string;
+  password: string;
+  c_password: string;
+  step: number;
+};
+
 export interface AuthProps {
   authState: AuthState;
   setAuthState: React.Dispatch<React.SetStateAction<AuthState>>;
@@ -16,4 +26,6 @@ export interface AuthProps {
   ) => Promise<RegisterResponse | ErrorResponse>;
   onLogIn: (email: string, password: string) => Promise<LoginResponse | ErrorResponse>;
   onLogOut: () => void;
+  userRegistrationInfo: UserRegistrationInfo;
+  setUserRegistrationInfo: React.Dispatch<React.SetStateAction<UserRegistrationInfo>>;
 }
