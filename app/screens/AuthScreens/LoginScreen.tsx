@@ -14,20 +14,23 @@ import EyeOpenIcon from "@assets/icons/auth/eye_open.svg";
 import EyeClosedIcon from "@assets/icons/auth/eye_closed.svg";
 import BlurBackground from "@/components/BlurBackground";
 import LoadingCircle from "@/components/LoadingCircle";
+import { useAuth } from "@/contexts/authContext";
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_props) {
-  const authPasswordInput = useRef<TextInput>(null);
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
 
   const [authPassword, setAuthPassword] = useState("");
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true);
-  const [attemptsCount, setAttemptsCount] = useState(0);
+
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const { onLogIn } = useAuth();
 
   const {
-    authenticationStore: { authEmail, setAuthEmail, setAuthToken },
+    authenticationStore: { authEmail, setAuthEmail },
   } = useStores();
 
   const {
@@ -47,18 +50,16 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     []
   );
 
-  function login() {
+  const login = async () => {
     setLoading(true);
-    setAttemptsCount(attemptsCount + 1);
 
-    setTimeout(() => {
-      setAuthToken(String(Date.now()));
+    const response = await onLogIn!(authEmail, authPassword);
+    if (!response.success) {
+      setError(response.message);
+    }
 
-      setAuthPassword("");
-      setAuthEmail("");
-      setLoading(false);
-    }, 3000);
-  }
+    setLoading(false);
+  };
 
   const getEyeIconColor = (props: any) => {
     if (props.status === "error") return colors.error;
@@ -70,6 +71,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     <>
       <Screen preset="auto" contentContainerStyle={themed($screenContentContainer)} safeAreaEdges={["top", "bottom"]}>
         <TextField
+          status={error ? "error" : undefined}
           value={authEmail}
           onChangeText={setAuthEmail}
           containerStyle={themed($textField)}
@@ -79,12 +81,11 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
           keyboardType="email-address"
           labelTx="loginScreen:emailFieldLabel"
           placeholderTx="Enter Email"
-          // helper={error}
-          onSubmitEditing={() => authPasswordInput.current?.focus()}
+          onChange={() => error && setError("")}
         />
 
         <TextField
-          ref={authPasswordInput}
+          status={error ? "error" : undefined}
           value={authPassword}
           onChangeText={setAuthPassword}
           containerStyle={themed($textField)}
@@ -116,7 +117,10 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
               </TouchableOpacity>
             )
           }
+          onChange={() => error && setError("")}
         />
+
+        {error && <Text style={{ marginBottom: 5, color: colors.error }}>{error}</Text>}
 
         <Button testID="login-button" style={themed($tapButton)} onPress={login} disabled={!authEmail || !authPassword}>
           Log in

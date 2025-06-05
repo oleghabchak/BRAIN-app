@@ -14,6 +14,7 @@ import { $styles, type ThemedStyle } from "@/theme";
 import { useHeader } from "@/utils/useHeader"; // @demo remove-current-line
 import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle";
 import { useAppTheme } from "@/utils/useAppTheme";
+import { useAuth } from "@/contexts/authContext";
 
 const welcomeLogo = require("@assets/images/logo.png");
 const welcomeFace = require("@assets/images/welcome-face.png");
@@ -30,9 +31,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
     const { navigation } = _props;
-    const {
-      authenticationStore: { logout },
-    } = useStores();
+    const { onLogOut } = useAuth();
 
     function goNext() {
       navigation.navigate("Demo", { screen: "DemoShowroom", params: {} });
@@ -49,9 +48,9 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(
     useHeader(
       {
         rightTx: "common:logOut",
-        onRightPress: logout,
+        onRightPress: onLogOut,
       },
-      [logout]
+      [onLogOut]
     );
     // @demo remove-block-end
 

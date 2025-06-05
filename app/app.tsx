@@ -14,27 +14,28 @@ if (__DEV__) {
   // Load Reactotron in development only.
   // Note that you must be using metro's `inlineRequires` for this to work.
   // If you turn it off in metro.config.js, you'll have to manually import it.
-  require("./devtools/ReactotronConfig.ts")
+  require("./devtools/ReactotronConfig.ts");
 }
-import "./utils/gestureHandler"
-import { useEffect, useState } from "react"
-import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
-import { useFonts } from "expo-font"
-import * as Linking from "expo-linking"
-import * as SplashScreen from "expo-splash-screen"
-import { KeyboardProvider } from "react-native-keyboard-controller"
+import "./utils/gestureHandler";
+import { useEffect, useState } from "react";
+import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context";
+import { useFonts } from "expo-font";
+import * as Linking from "expo-linking";
+import * as SplashScreen from "expo-splash-screen";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 
-import { useInitialRootStore } from "./models" // @mst remove-current-line
-import { AppNavigator, useNavigationPersistence } from "./navigators"
-import * as storage from "./utils/storage"
-import { customFontsToLoad } from "./theme"
-import { initI18n } from "./i18n"
-import { loadDateFnsLocale } from "./utils/formatDate"
+import { useInitialRootStore } from "./models"; // @mst remove-current-line
+import { AppNavigator, useNavigationPersistence } from "./navigators";
+import * as storage from "./utils/storage";
+import { customFontsToLoad } from "./theme";
+import { initI18n } from "./i18n";
+import { loadDateFnsLocale } from "./utils/formatDate";
+import { AuthProvider } from "./contexts/authContext";
 
-export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
+export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE";
 
 // Web linking configuration
-const prefix = Linking.createURL("/")
+const prefix = Linking.createURL("/");
 const config = {
   screens: {
     Login: {
@@ -52,7 +53,7 @@ const config = {
       },
     },
   },
-}
+};
 
 /**
  * This is the root component of our app.
@@ -64,16 +65,16 @@ export function App() {
     initialNavigationState,
     onNavigationStateChange,
     isRestored: isNavigationStateRestored,
-  } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
+  } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY);
 
-  const [areFontsLoaded, fontLoadError] = useFonts(customFontsToLoad)
-  const [isI18nInitialized, setIsI18nInitialized] = useState(false)
+  const [areFontsLoaded, fontLoadError] = useFonts(customFontsToLoad);
+  const [isI18nInitialized, setIsI18nInitialized] = useState(false);
 
   useEffect(() => {
     initI18n()
       .then(() => setIsI18nInitialized(true))
-      .then(() => loadDateFnsLocale())
-  }, [])
+      .then(() => loadDateFnsLocale());
+  }, []);
 
   // @mst replace-next-line useEffect(() => {
   const { rehydrated } = useInitialRootStore(() => {
@@ -82,10 +83,10 @@ export function App() {
 
     // If your initialization scripts run very fast, it's good to show the splash screen for just a bit longer to prevent flicker.
     // Slightly delaying splash screen hiding for better UX; can be customized or removed as needed,
-    setTimeout(SplashScreen.hideAsync, 500)
+    setTimeout(SplashScreen.hideAsync, 500);
 
     // @mst replace-next-line }, [])
-  })
+  });
 
   // Before we show the app, we have to wait for our state to be ready.
   // In the meantime, don't render anything. This will be the background
@@ -99,24 +100,26 @@ export function App() {
     !isI18nInitialized ||
     (!areFontsLoaded && !fontLoadError)
   ) {
-    return null
+    return null;
   }
 
   const linking = {
     prefixes: [prefix],
     config,
-  }
+  };
 
   // otherwise, we're ready to render the app
   return (
-    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <KeyboardProvider>
-        <AppNavigator
-          linking={linking}
-          initialState={initialNavigationState}
-          onStateChange={onNavigationStateChange}
-        />
-      </KeyboardProvider>
-    </SafeAreaProvider>
-  )
+    <AuthProvider>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+        <KeyboardProvider>
+          <AppNavigator
+            linking={linking}
+            initialState={initialNavigationState}
+            onStateChange={onNavigationStateChange}
+          />
+        </KeyboardProvider>
+      </SafeAreaProvider>
+    </AuthProvider>
+  );
 }

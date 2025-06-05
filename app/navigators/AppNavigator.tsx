@@ -11,6 +11,7 @@ import { useAppTheme, useThemeProvider } from "@/utils/useAppTheme";
 import { DemoNavigator, DemoTabParamList } from "./DemoNavigator";
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities";
 import AuthNavigator, { AuthStackParamList } from "./AuthNavigator";
+import { useAuth } from "@/contexts/authContext";
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -60,16 +61,14 @@ export interface NavigationProps extends Partial<ComponentProps<typeof Navigatio
 
 export const AppNavigator = observer(function AppNavigator(props: NavigationProps) {
   const { themeScheme, navigationTheme, setThemeContextOverride, ThemeProvider } = useThemeProvider();
-  const {
-    authenticationStore: { isAuthenticated },
-  } = useStores();
+  const { authState } = useAuth();
 
   useBackButtonHandler((routeName) => exitRoutes.includes(routeName));
 
   return (
     <ThemeProvider value={{ themeScheme, setThemeContextOverride }}>
       <NavigationContainer ref={navigationRef} theme={navigationTheme} {...props}>
-        {isAuthenticated ? <AppStack /> : <AuthNavigator />}
+        {authState?.authenticated ? <AppStack /> : <AuthNavigator />}
       </NavigationContainer>
     </ThemeProvider>
   );
