@@ -38,7 +38,7 @@ export const AuthScreen: FC<AuthScreenProps> = () => {
         </View>
 
         <View style={themed($buttonContainer)}>
-          <Button>Sign up</Button>
+          <Button onPress={() => navigation.navigate("SignUp")}>Sign up</Button>
           <Button preset="outline" onPress={() => navigation.navigate("Login")}>
             Log in
           </Button>

@@ -37,7 +37,7 @@ export interface TextFieldProps extends Omit<TextInputProps, "ref"> {
   /**
    * Label text which is looked up via i18n.
    */
-  labelTx?: TextProps["tx"];
+  labelTx?: string;
   /**
    * Optional label options to pass to i18n. Useful for interpolation
    * as well as explicitly setting locale or translation fallbacks.
@@ -182,7 +182,6 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
     if (disabled) return;
     input.current?.focus();
   }
-  
 
   useImperativeHandle(ref, () => input.current as TextInput);
 
@@ -234,8 +233,6 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
             multiline={TextInputProps.multiline ?? false}
           />
         )}
-
-       
       </View>
 
       {!!(helper || helperTx) && (
@@ -256,7 +253,7 @@ const $labelStyle: ThemedStyle<TextStyle> = ({ spacing }) => ({
   marginBottom: spacing.xs,
 });
 
-const $inputWrapperStyle: ThemedStyle<ViewStyle> = ({ colors }) => ({
+export const $inputWrapperStyle: ThemedStyle<ViewStyle> = ({ colors }) => ({
   alignItems: "center",
   borderWidth: 1,
   borderRadius: 16,

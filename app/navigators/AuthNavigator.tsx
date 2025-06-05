@@ -16,7 +16,7 @@ export default function AuthNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Auth">
       <Stack.Screen name="Auth" component={Screens.AuthScreen} />
-      {/* <Stack.Screen name="SignUp" component={Screens.SignUpScreen} /> */}
+      <Stack.Screen name="SignUp" component={Screens.SignUpScreen} />
       <Stack.Screen name="Login" component={Screens.LoginScreen} />
       {/* <Stack.Screen name="PasswordRecovery" component={Screens.PasswordRecoveryScreen} />
       <Stack.Screen name="ResetPasswordOtp" component={Screens.ResetPasswordOtpScreen} />

@@ -16,6 +16,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     token: null,
   });
 
+  const [userRegistrationInfo, setUserRegistrationInfo] = useState({
+    name: "",
+    birth_date: "",
+    gender: "",
+  });
+
   useEffect(() => {
     const initializeAuth = async () => {
       const token = await SecureStoreGet("token");

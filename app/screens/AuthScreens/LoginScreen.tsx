@@ -1,5 +1,5 @@
-import { FC, useRef, useState } from "react";
-import { TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
+import { FC, useState } from "react";
+import { TouchableOpacity, ViewStyle } from "react-native";
 import { observer } from "mobx-react-lite";
 import { Button, Screen, Text, TextField } from "@/components";
 import { useStores } from "@/models";
@@ -9,7 +9,7 @@ import { useAppTheme } from "@/utils/useAppTheme";
 import { useHeader } from "@/utils/useHeader";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { AuthStackParamList } from "@/navigators/AuthNavigator";
-import LeftArrowIcon from "@assets/icons/left-arrow.svg";
+import LeftArrowIcon from "@assets/icons/arrow-left.svg";
 import EyeOpenIcon from "@assets/icons/auth/eye_open.svg";
 import EyeClosedIcon from "@assets/icons/auth/eye_closed.svg";
 import BlurBackground from "@/components/BlurBackground";
@@ -125,7 +125,12 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         <Button testID="login-button" style={themed($tapButton)} onPress={login} disabled={!authEmail || !authPassword}>
           Log in
         </Button>
-        <Button preset="outline" testID="login-button" style={themed($tapButton)}>
+        <Button
+          preset="outline"
+          testID="login-button"
+          style={themed($tapButton)}
+          onPress={() => navigation.navigate("SignUp")}
+        >
           Switch to Sign up
         </Button>
         <TouchableOpacity style={{ width: "100%", alignItems: "center", marginTop: 20 }}>
