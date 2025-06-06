@@ -1,18 +1,19 @@
 import React from "react";
-import { TouchableOpacity, Text, View, StyleSheet } from "react-native";
+import { TouchableOpacity, Text, View, StyleSheet, StyleProp, ViewStyle } from "react-native";
 import TickIcon from "@assets/icons/tick.svg";
 
 interface CheckboxProps {
   checked: boolean;
   onPress: () => void;
   children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 }
 
-export const Checkbox: React.FC<CheckboxProps> = ({ checked, onPress, children }) => {
+export const Checkbox: React.FC<CheckboxProps> = ({ checked, onPress, children, style }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onPress}>
-        <View style={[styles.checkbox, checked && styles.checkboxChecked]}>
+        <View style={[styles.checkbox, checked && styles.checkboxChecked, style]}>
           {checked && <TickIcon width={12} height={12} />}
         </View>
       </TouchableOpacity>
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 5,
+    marginBottom: 10,
   },
   checkbox: {
     width: 18,

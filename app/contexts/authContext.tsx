@@ -56,8 +56,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const user = response.data;
 
         setAuthState({
+          ...authState,
           token: user.success.token,
-          authenticated: true,
         });
 
         setToken(user.success.token);
@@ -70,6 +70,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (error) {
       console.error(error);
       return { success: false, message: "Signup failed" };
+    }
+  };
+
+  const verifyEmail = async (email: string, code: string) => {
+    if (!code) {
+      return { success: false, message: "Verification code can't be empty" };
+    }
+    try {
+      const response = await api.post<RegisterResponse>("/verify-email", {
+        email,
+        token: code,
+      });
+      if (response && response.success) {
+        return response.data;
+      } else {
+        if (response.message !== "[object Object]") return { success: false, message: response?.message };
+        return { success: false, message: "Email verification failed" };
+      }
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: "Email verification failed" };
     }
   };
 
@@ -126,6 +147,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     onSignUp: signUp,
     onLogIn: logIn,
     onLogOut: logOut,
+    verifyEmail,
     authState,
     setAuthState,
     userRegistrationInfo,

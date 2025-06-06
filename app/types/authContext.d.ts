@@ -24,6 +24,7 @@ export interface AuthProps {
     password: string,
     c_password: string
   ) => Promise<RegisterResponse | ErrorResponse>;
+  verifyEmail: (email: string, code: string) => Promise<RegisterResponse | ErrorResponse>;
   onLogIn: (email: string, password: string) => Promise<LoginResponse | ErrorResponse>;
   onLogOut: () => void;
   userRegistrationInfo: UserRegistrationInfo;

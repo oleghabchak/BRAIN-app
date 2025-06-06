@@ -16,7 +16,7 @@ import BlurBackground from "@/components/BlurBackground";
 import LoadingCircle from "@/components/LoadingCircle";
 import { useAuth } from "@/contexts/authContext";
 
-interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
+interface LoginScreenProps extends AppStackScreenProps<"Login"> { }
 
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_props) {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
@@ -148,7 +148,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   );
 });
 
-const $screenContentContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
+ const $screenContentContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   paddingVertical: spacing.xxl,
   paddingHorizontal: spacing.lg,
 });

@@ -3,6 +3,7 @@ export * from "./WelcomeScreen";
 export * from "./AuthScreens/LoginScreen";
 export * from "./AuthScreens/SignUpScreen";
 export * from "./AuthScreens/AuthScreen";
+export * from "./AuthScreens/InfoScreen";
 
 export * from "./DemoCommunityScreen";
 export * from "./DemoDebugScreen";

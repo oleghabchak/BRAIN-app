@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
+import { ActivityIndicator, TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
 import { observer } from "mobx-react-lite";
 import { Button, ListItem, ListView, Screen, Text, TextField } from "@/components";
 import { AppStackScreenProps } from "@/navigators";
@@ -18,6 +18,10 @@ import StepsPagination from "@/components/StepsPagination";
 import EyeOpenIcon from "@assets/icons/auth/eye_open.svg";
 import EyeClosedIcon from "@assets/icons/auth/eye_closed.svg";
 import { Checkbox } from "@/components/Toggle/Checkbox";
+import { UserRegistrationInfo } from "@/types/authContext";
+import OTPCode from "@/components/OTPCode";
+import TextWithLink from "@/components/TextWithLink";
+import EmailVerifiedImage from "@assets/images/email_verified.svg";
 
 interface SignUpScreenProps extends AppStackScreenProps<"SignUp"> {}
 
@@ -33,8 +37,14 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
 
   const [isDisabled, setIsDisabled] = useState(true);
 
-  const { userRegistrationInfo, setUserRegistrationInfo } = useAuth();
+  const { userRegistrationInfo, setUserRegistrationInfo, onSignUp, verifyEmail } = useAuth();
   const { step } = userRegistrationInfo;
+
+  const [otpCode, setOtpCode] = useState(Array(6).fill(""));
+  const [registerError, setRegisterError] = useState("");
+  const [termsError, setTermsError] = useState("");
+  const [emailVerificationError, setEmailVerificationError] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
 
   const {
     themed,
@@ -43,7 +53,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
 
   useEffect(() => {
     getDisabledState();
-  }, [userRegistrationInfo]);
+  }, [userRegistrationInfo, otpCode]);
 
   const getDisabledState = () => {
     if (step === 1) {
@@ -52,6 +62,8 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
     } else if (step === 2) {
       const { email, password, c_password } = userRegistrationInfo;
       setIsDisabled(!email || !password || !c_password);
+    } else if (step === 3) {
+      setIsDisabled(otpCode.some((el) => el === ""));
     }
   };
 
@@ -78,6 +90,41 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
     },
     [step]
   );
+
+  const signUp = async () => {
+    if (!isTermsChecked || !isPrivacyChecked || !isCookiePolicyChecked) {
+      setTermsError("You need to agree to all terms before register.");
+      return;
+    }
+    setLoading(true);
+    const { name, email, password, c_password } = userRegistrationInfo;
+    const response = await onSignUp(name, email, password, c_password);
+    if (response.success) {
+      console.log(response.email_verification_token);
+      setUserRegistrationInfo({ ...userRegistrationInfo, step: step + 1 });
+    } else {
+      setRegisterError(response.message);
+    }
+    setLoading(false);
+  };
+
+  const onVerifyEmail = async () => {
+    setModalOpen(true);
+    setLoading(true);
+    const { email } = userRegistrationInfo;
+    const code = otpCode.join("");
+    const response = await verifyEmail(email, code);
+    if (!response.success) {
+      setEmailVerificationError(response.message);
+      setModalOpen(false);
+    } else {
+      setTimeout(() => {
+        navigation.navigate("Info");
+        setModalOpen(false);
+      }, 2000);
+    }
+    setLoading(false);
+  };
 
   const getEyeIconColor = (props: any, authPassword: string) => {
     if (props.status === "error") return colors.error;
@@ -118,6 +165,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         {step == 2 && (
           <View style={{ flex: 1 }}>
             <TextField
+              status={registerError ? "error" : undefined}
               value={userRegistrationInfo.email}
               onChangeText={(email) => updateUserRegistrationInfo({ email })}
               containerStyle={themed($textField)}
@@ -125,8 +173,11 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
               autoCorrect={false}
               labelTx="Email"
               placeholderTx="Enter Email"
+              placeholderTextColor={registerError ? colors.error : colors.palette.neutral600}
+              onChange={() => registerError && setRegisterError("")}
             />
             <TextField
+              status={registerError ? "error" : undefined}
               value={userRegistrationInfo.password}
               onChangeText={(password) => updateUserRegistrationInfo({ password })}
               containerStyle={themed($textField)}
@@ -136,6 +187,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
               secureTextEntry={isAuthPasswordHidden}
               labelTx="Password"
               placeholderTx="Enter password"
+              placeholderTextColor={registerError ? colors.error : colors.palette.neutral600}
               RightAccessory={(props) =>
                 !isAuthPasswordHidden ? (
                   <TouchableOpacity onPress={() => setIsAuthPasswordHidden(true)}>
@@ -157,8 +209,10 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
                   </TouchableOpacity>
                 )
               }
+              onChange={() => registerError && setRegisterError("")}
             />
             <TextField
+              status={registerError ? "error" : undefined}
               value={userRegistrationInfo.c_password}
               onChangeText={(c_password) => updateUserRegistrationInfo({ c_password })}
               containerStyle={[themed($textField), { marginBottom: 25 }]}
@@ -168,6 +222,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
               secureTextEntry={isAuthPasswordHidden}
               labelTx="Confirm Password"
               placeholderTx="Enter password"
+              placeholderTextColor={registerError ? colors.error : colors.palette.neutral600}
               RightAccessory={(props) =>
                 !isAuthPasswordHidden ? (
                   <TouchableOpacity onPress={() => setIsAuthPasswordHidden(true)}>
@@ -189,37 +244,92 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
                   </TouchableOpacity>
                 )
               }
+              onChange={() => registerError && setRegisterError("")}
             />
-            <Checkbox checked={isPrivacyChecked} onPress={() => setPrivacyChecked(!isPrivacyChecked)}>
-              <View style={{ alignItems: "center", flexDirection: "row", gap: 3 }}>
-                <Text style={{ fontSize: 14, color: "#8F9098" }}>I understood the</Text>
-                <TouchableOpacity>
-                  <Text weight="medium" style={{ fontSize: 14, color: colors.palette.primary500 }}>
-                    Privacy Policy.
-                  </Text>
-                </TouchableOpacity>
-              </View>
+
+            <Checkbox
+              style={termsError ? { borderColor: colors.error } : undefined}
+              checked={isPrivacyChecked}
+              onPress={() => {
+                setPrivacyChecked(!isPrivacyChecked);
+                setTermsError("");
+              }}
+            >
+              <TextWithLink
+                defaultText="I understood the"
+                clickableText="Privacy Policy."
+                defaultTextStyles={{ color: colors.palette.neutral600, fontWeight: 400 }}
+                clickableTextStyles={{ fontWeight: 500 }}
+              />
             </Checkbox>
-            <Checkbox checked={isTermsChecked} onPress={() => setTermsChecked(!isTermsChecked)}>
-              <View style={{ alignItems: "center", flexDirection: "row", gap: 3 }}>
-                <Text style={{ fontSize: 14, color: "#8F9098" }}>I understood the</Text>
-                <TouchableOpacity>
-                  <Text weight="medium" style={{ fontSize: 14, color: colors.palette.primary500 }}>
-                    Terms of Policy.
-                  </Text>
-                </TouchableOpacity>
-              </View>
+            <Checkbox
+              style={termsError ? { borderColor: colors.error } : undefined}
+              checked={isTermsChecked}
+              onPress={() => {
+                setTermsChecked(!isTermsChecked);
+                setTermsError("");
+              }}
+            >
+              <TextWithLink
+                defaultText="I understood the"
+                clickableText="Terms of Policy."
+                defaultTextStyles={{ color: colors.palette.neutral600, fontWeight: 400 }}
+                clickableTextStyles={{ fontWeight: 500 }}
+              />
             </Checkbox>
-            <Checkbox checked={isCookiePolicyChecked} onPress={() => setCookiePolicyChecked(!isCookiePolicyChecked)}>
-              <View style={{ alignItems: "center", flexDirection: "row", gap: 3 }}>
-                <Text style={{ fontSize: 14, color: "#8F9098" }}>I understood the</Text>
-                <TouchableOpacity>
-                  <Text weight="medium" style={{ fontSize: 14, color: colors.palette.primary500 }}>
-                    Cookie Policy.
-                  </Text>
-                </TouchableOpacity>
-              </View>
+            <Checkbox
+              style={termsError ? { borderColor: colors.error } : undefined}
+              checked={isCookiePolicyChecked}
+              onPress={() => {
+                setCookiePolicyChecked(!isCookiePolicyChecked);
+                setTermsError("");
+              }}
+            >
+              <TextWithLink
+                defaultText="I understood the"
+                clickableText="Cookie Policy."
+                defaultTextStyles={{ color: colors.palette.neutral600, fontWeight: 400 }}
+                clickableTextStyles={{ fontWeight: 500 }}
+              />
             </Checkbox>
+            {registerError && <Text style={{ fontSize: 12, color: colors.error }}>{registerError}</Text>}
+            {termsError && <Text style={{ fontSize: 12, color: colors.error }}>{termsError}</Text>}
+          </View>
+        )}
+
+        {step == 3 && (
+          <View style={{ flex: 1, marginTop: 20 }}>
+            <Text style={{ fontSize: 18, marginBottom: 5 }}>
+              We’ve sent a verification link with a 6-digit code to your email address
+            </Text>
+            <Text weight="medium" style={{ color: colors.palette.neutral600, fontSize: 13 }}>
+              Please check your email to continue the sign-up process.
+            </Text>
+            <OTPCode
+              style={emailVerificationError ? { borderColor: colors.error, color: colors.error } : undefined}
+              otpCode={otpCode}
+              setOtpCode={setOtpCode}
+              onChange={() => emailVerificationError && setEmailVerificationError("")}
+            />
+            {emailVerificationError && (
+              <Text style={{ fontSize: 12, color: colors.error }}>{emailVerificationError}</Text>
+            )}
+
+            <TextWithLink
+              style={{ marginTop: 15 }}
+              defaultText="Haven't received the verification code?"
+              clickableText="Resend it."
+              clickableTextStyles={{ textDecorationLine: "underline", fontWeight: 700 }}
+            />
+
+            <Text style={{ fontSize: 18, marginTop: 50 }}>Having trouble finding your 6-digit code?</Text>
+            <Text
+              weight="medium"
+              style={{ color: colors.palette.neutral600, fontSize: 12, marginTop: 10, lineHeight: 20 }}
+            >
+              Check your spam folder or make sure you spelled your email address correctly. If needed, please go back to
+              the previous screen to re-enter your email address!
+            </Text>
           </View>
         )}
 
@@ -227,14 +337,35 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
           testID="login-button"
           disabled={isDisabled}
           style={themed($tapButton)}
-          onPress={() => setUserRegistrationInfo({ ...userRegistrationInfo, step: Math.min(step + 1, 3) })}
+          onPress={() => {
+            if (step == 2) {
+              signUp();
+              return;
+            }
+            if (step < 3) {
+              setUserRegistrationInfo({ ...userRegistrationInfo, step: step + 1 });
+            } else {
+              onVerifyEmail();
+            }
+          }}
         >
-          Next
+          {loading ? <ActivityIndicator color="white" /> : <>{step == 3 ? "Submit code" : "Next"}</>}
         </Button>
       </Screen>
-      {loading && (
+      {modalOpen && (
         <BlurBackground>
-          <LoadingCircle />
+          {loading ? (
+            <LoadingCircle />
+          ) : (
+            <View style={$emailVerifiedModal}>
+              <View style={{ marginLeft: 20 }}>
+                <EmailVerifiedImage width={200} height={200} />
+                <Text weight="medium" style={{ fontSize: 18, marginTop: 10 }}>
+                  Your email is verified!
+                </Text>
+              </View>
+            </View>
+          )}
         </BlurBackground>
       )}
     </>
@@ -254,3 +385,12 @@ export const $textField: ThemedStyle<ViewStyle> = ({ spacing }) => ({
 export const $tapButton: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   marginTop: spacing.xs,
 });
+
+const $emailVerifiedModal: ViewStyle = {
+  backgroundColor: "white",
+  alignItems: "center",
+  width: "90%",
+  paddingVertical: 30,
+  borderRadius: 16,
+  justifyContent: "center",
+};

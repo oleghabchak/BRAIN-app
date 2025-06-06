@@ -23,7 +23,7 @@ export default function StepsPagination({ currentStep }: { currentStep: number }
               flex: 1,
               width: 30,
               height: 5,
-              backgroundColor: currentStep === step ? colors.palette.primary500 : colors.palette.neutral200,
+              backgroundColor: currentStep >= step ? colors.palette.primary500 : colors.palette.neutral200,
               borderRadius: 10,
             }}
           />
