@@ -1,124 +1,52 @@
-import { useEffect, useRef, useCallback } from "react"
-import { Image, ImageStyle, Animated, StyleProp, View, ViewStyle } from "react-native"
+import React from "react";
+import { TouchableOpacity, Text, View, StyleSheet, StyleProp, ViewStyle } from "react-native";
+import TickIcon from "@assets/icons/tick.svg";
 
-import { $styles } from "@/theme"
-import { useAppTheme } from "@/utils/useAppTheme"
-
-import { iconRegistry, IconTypes } from "../Icon"
-
-import { $inputOuterBase, BaseToggleInputProps, ToggleProps, Toggle } from "./Toggle"
-
-export interface CheckboxToggleProps extends Omit<ToggleProps<CheckboxInputProps>, "ToggleInput"> {
-  /**
-   * Optional style prop that affects the Image component.
-   */
-  inputDetailStyle?: ImageStyle
-  /**
-   * Checkbox-only prop that changes the icon used for the "on" state.
-   */
-  icon?: IconTypes
+interface CheckboxProps {
+  checked: boolean;
+  onPress: () => void;
+  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 }
 
-interface CheckboxInputProps extends BaseToggleInputProps<CheckboxToggleProps> {
-  icon?: CheckboxToggleProps["icon"]
-}
-/**
- * @param {CheckboxToggleProps} props - The props for the `Checkbox` component.
- * @see [Documentation and Examples]{@link https://docs.infinite.red/ignite-cli/boilerplate/app/components/Checkbox}
- * @returns {JSX.Element} The rendered `Checkbox` component.
- */
-export function Checkbox(props: CheckboxToggleProps) {
-  const { icon, ...rest } = props
-  const checkboxInput = useCallback(
-    (toggleProps: CheckboxInputProps) => <CheckboxInput {...toggleProps} icon={icon} />,
-    [icon],
-  )
-  return <Toggle accessibilityRole="checkbox" {...rest} ToggleInput={checkboxInput} />
-}
-
-function CheckboxInput(props: CheckboxInputProps) {
-  const {
-    on,
-    status,
-    disabled,
-    icon = "check",
-    outerStyle: $outerStyleOverride,
-    innerStyle: $innerStyleOverride,
-    detailStyle: $detailStyleOverride,
-  } = props
-
-  const {
-    theme: { colors },
-  } = useAppTheme()
-
-  const opacity = useRef(new Animated.Value(0))
-
-  useEffect(() => {
-    Animated.timing(opacity.current, {
-      toValue: on ? 1 : 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start()
-  }, [on])
-
-  const offBackgroundColor = [
-    disabled && colors.palette.neutral400,
-    status === "error" && colors.errorBackground,
-    colors.palette.neutral200,
-  ].filter(Boolean)[0]
-
-  const outerBorderColor = [
-    disabled && colors.palette.neutral400,
-    status === "error" && colors.error,
-    !on && colors.palette.neutral800,
-    colors.palette.secondary500,
-  ].filter(Boolean)[0]
-
-  const onBackgroundColor = [
-    disabled && colors.transparent,
-    status === "error" && colors.errorBackground,
-    colors.palette.secondary500,
-  ].filter(Boolean)[0]
-
-  const iconTintColor = [
-    disabled && colors.palette.neutral600,
-    status === "error" && colors.error,
-    colors.palette.accent100,
-  ].filter(Boolean)[0]
-
+export const Checkbox: React.FC<CheckboxProps> = ({ checked, onPress, children, style }) => {
   return (
-    <View
-      style={[
-        $inputOuter,
-        { backgroundColor: offBackgroundColor, borderColor: outerBorderColor },
-        $outerStyleOverride,
-      ]}
-    >
-      <Animated.View
-        style={[
-          $styles.toggleInner,
-          { backgroundColor: onBackgroundColor },
-          $innerStyleOverride,
-          { opacity: opacity.current },
-        ]}
-      >
-        <Image
-          source={icon ? iconRegistry[icon] : iconRegistry.check}
-          style={[
-            $checkboxDetail,
-            !!iconTintColor && { tintColor: iconTintColor },
-            $detailStyleOverride,
-          ]}
-        />
-      </Animated.View>
+    <View style={styles.container}>
+      <TouchableOpacity onPress={onPress}>
+        <View style={[styles.checkbox, checked && styles.checkboxChecked, style]}>
+          {checked && <TickIcon width={12} height={12} />}
+        </View>
+      </TouchableOpacity>
+      {children}
     </View>
-  )
-}
+  );
+};
 
-const $checkboxDetail: ImageStyle = {
-  width: 20,
-  height: 20,
-  resizeMode: "contain",
-}
-
-const $inputOuter: StyleProp<ViewStyle> = [$inputOuterBase, { borderRadius: 4 }]
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  checkbox: {
+    width: 18,
+    height: 18,
+    borderRadius: 3,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#8F9098",
+    marginRight: 10,
+  },
+  checkboxChecked: {
+    backgroundColor: "#5A67D8",
+    borderColor: "#5A67D8",
+  },
+  checkText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  label: {
+    color: "#4A5568",
+  },
+});

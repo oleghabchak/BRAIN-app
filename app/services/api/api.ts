@@ -1,91 +1,60 @@
-/**
- * This Api class lets you define an API endpoint and methods to request
- * data and process it.
- *
- * See the [Backend API Integration](https://docs.infinite.red/ignite-cli/boilerplate/app/services/#backend-api-integration)
- * documentation for more details.
- */
-import {
-  ApiResponse, // @demo remove-current-line
-  ApisauceInstance,
-  create,
-} from "apisauce"
+import { AxiosInstance } from "axios";
+import { createAxiosClient } from "./client";
+import type { ApiResult } from "./types";
 
-import Config from "@/config"
-import type { EpisodeSnapshotIn } from "@/models/Episode" // @demo remove-current-line
+class ApiService {
+  private client: AxiosInstance;
 
-import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem" // @demo remove-current-line
-import type {
-  ApiConfig,
-  ApiFeedResponse, // @demo remove-current-line
-} from "./api.types"
-
-/**
- * Configuring the apisauce instance.
- */
-export const DEFAULT_API_CONFIG: ApiConfig = {
-  url: Config.API_URL,
-  timeout: 10000,
-}
-
-/**
- * Manages all requests to the API. You can use this class to build out
- * various requests that you need to call from your backend API.
- */
-export class Api {
-  apisauce: ApisauceInstance
-  config: ApiConfig
-
-  /**
-   * Set up our API instance. Keep this lightweight!
-   */
-  constructor(config: ApiConfig = DEFAULT_API_CONFIG) {
-    this.config = config
-    this.apisauce = create({
-      baseURL: this.config.url,
-      timeout: this.config.timeout,
-      headers: {
-        Accept: "application/json",
-      },
-    })
+  constructor() {
+    this.client = createAxiosClient();
   }
 
-  // @demo remove-block-start
-  /**
-   * Gets a list of recent React Native Radio episodes.
-   */
-  async getEpisodes(): Promise<{ kind: "ok"; episodes: EpisodeSnapshotIn[] } | GeneralApiProblem> {
-    // make the api call
-    const response: ApiResponse<ApiFeedResponse> = await this.apisauce.get(
-      `api.json?rss_url=https%3A%2F%2Ffeeds.simplecast.com%2FhEI_f9Dx`,
-    )
-
-    // the typical ways to die when calling an api
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response)
-      if (problem) return problem
-    }
-
-    // transform the data into the format we are expecting
+  async get<T>(url: string, params?: Record<string, any>): Promise<ApiResult<T>> {
     try {
-      const rawData = response.data
-
-      // This is where we transform the data into the shape we expect for our MST model.
-      const episodes: EpisodeSnapshotIn[] =
-        rawData?.items.map((raw) => ({
-          ...raw,
-        })) ?? []
-
-      return { kind: "ok", episodes }
-    } catch (e) {
-      if (__DEV__ && e instanceof Error) {
-        console.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
-      }
-      return { kind: "bad-data" }
+      const response = await this.client.get<T>(url, { params });
+      return { success: true, data: response.data };
+    } catch (error: any) {
+      return { success: false, message: error.toString() };
     }
   }
-  // @demo remove-block-end
+
+  async post<T, D = any>(url: string, data?: D, headers?: any): Promise<ApiResult<T>> {
+    try {
+      const response = await this.client.post<T>(url, data, {
+        headers,
+      });
+      return { success: true, data: response.data };
+    } catch (error: any) {
+      return { success: false, message: error.toString() };
+    }
+  }
+
+  async put<T, D = any>(url: string, data: D): Promise<ApiResult<T>> {
+    try {
+      const response = await this.client.put<T>(url, data);
+      return { success: true, data: response.data };
+    } catch (error: any) {
+      return { success: false, message: error.toString() };
+    }
+  }
+
+  async patch<T, D = any>(url: string, data: D): Promise<ApiResult<T>> {
+    try {
+      const response = await this.client.patch<T>(url, data);
+      return { success: true, data: response.data };
+    } catch (error: any) {
+      return { success: false, message: error.toString() };
+    }
+  }
+
+  async delete<T>(url: string): Promise<ApiResult<T>> {
+    try {
+      const response = await this.client.delete<T>(url);
+      return { success: true, data: response.data };
+    } catch (error: any) {
+      return { success: false, message: error.toString() };
+    }
+  }
 }
 
-// Singleton instance of the API for convenience
-export const api = new Api()
+export const api = new ApiService();

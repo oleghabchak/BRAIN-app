@@ -37,7 +37,7 @@ export interface TextFieldProps extends Omit<TextInputProps, "ref"> {
   /**
    * Label text which is looked up via i18n.
    */
-  labelTx?: TextProps["tx"];
+  labelTx?: string;
   /**
    * Optional label options to pass to i18n. Useful for interpolation
    * as well as explicitly setting locale or translation fallbacks.
@@ -71,7 +71,7 @@ export interface TextFieldProps extends Omit<TextInputProps, "ref"> {
   /**
    * Placeholder text which is looked up via i18n.
    */
-  placeholderTx?: TextProps["tx"];
+  placeholderTx?: string;
   /**
    * Optional placeholder options to pass to i18n. Useful for interpolation
    * as well as explicitly setting locale or translation fallbacks.
@@ -152,7 +152,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
 
   const disabled = TextInputProps.editable === false || status === "disabled";
 
-  const placeholderContent = placeholderTx ? translate(placeholderTx, placeholderTxOptions) : placeholder;
+  const placeholderContent = placeholderTx;
 
   const $containerStyles = [$containerStyleOverride];
 
@@ -253,12 +253,13 @@ const $labelStyle: ThemedStyle<TextStyle> = ({ spacing }) => ({
   marginBottom: spacing.xs,
 });
 
-const $inputWrapperStyle: ThemedStyle<ViewStyle> = ({ colors }) => ({
-  alignItems: "flex-start",
+export const $inputWrapperStyle: ThemedStyle<ViewStyle> = ({ colors }) => ({
+  alignItems: "center",
   borderWidth: 1,
   borderRadius: 16,
-  backgroundColor: colors.palette.neutral200,
+  backgroundColor: colors.palette.neutral100,
   borderColor: colors.palette.neutral400,
+  padding: 4,
   overflow: "hidden",
 });
 
@@ -270,8 +271,7 @@ const $inputStyle: ThemedStyle<ViewStyle> = ({ colors, typography, spacing }) =>
   fontSize: 16,
   height: 34,
   // https://github.com/facebook/react-native/issues/21720#issuecomment-532642093
-  paddingVertical: 0,
-  paddingHorizontal: 0,
+
   marginVertical: spacing.xs,
   marginTop: 6,
   marginHorizontal: spacing.sm,
@@ -282,7 +282,6 @@ const $helperStyle: ThemedStyle<TextStyle> = ({ spacing }) => ({
 });
 
 const $rightAccessoryStyle: ThemedStyle<ViewStyle> = ({ spacing }) => ({
-  marginEnd: spacing.xs,
   height: 46,
   justifyContent: "center",
   alignItems: "center",
