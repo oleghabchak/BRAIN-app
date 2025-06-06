@@ -1,14 +1,14 @@
 {
-  "name": "HelloWorld",
-  "displayName": "HelloWorld",
+  "name": "Brain Sugar",
+  "displayName": "Brain Sugar",
   "expo": {
-    "name": "HelloWorld",
-    "slug": "HelloWorld",
-    "scheme": "helloworld",
+    "name": "Brain Sugar",
+    "slug": "Brain Sugar",
+    "scheme": "Brain Sugar",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "icon": "./assets/images/app-icon-all.png",
+    "icon": "./assets/images/brainsugar-logo.png",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -18,8 +18,8 @@
       "**/*"
     ],
     "android": {
-      "icon": "./assets/images/app-icon-android-legacy.png",
-      "package": "com.helloworld",
+      "icon": "./assets/images/brainsugar-logo.png",
+      "package": "com.brainsugar",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/app-icon-android-adaptive-foreground.png",
         "backgroundImage": "./assets/images/app-icon-android-adaptive-background.png"
@@ -27,12 +27,12 @@
       "allowBackup": false
     },
     "ios": {
-      "icon": "./assets/images/app-icon-ios.png",
+      "icon": "./assets/images/brainsugar-logo.png",
       "supportsTablet": true,
-      "bundleIdentifier": "com.helloworld"
+      "bundleIdentifier": "com.brainsugar"
     },
     "web": {
-      "favicon": "./assets/images/app-icon-web-favicon.png",
+      "favicon": "./assets/images/brainsugar-logo.png",
       "bundler": "metro"
     },
     "plugins": [
@@ -42,9 +42,9 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/app-icon-android-adaptive-foreground.png",
-          "imageWidth": 300,
+          "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#191015"
+          "backgroundColor": "#fff"
         }
       ]
     ],
