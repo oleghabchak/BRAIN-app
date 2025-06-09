@@ -3,7 +3,6 @@ import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navig
 import { observer } from "mobx-react-lite";
 import { ComponentProps, useEffect, useRef } from "react";
 
-import Config from "@/config";
 import { useAuth } from "@/contexts/authContext";
 import { useStores } from "@/models";
 import * as Screens from "@/screens";
@@ -23,12 +22,6 @@ export type AppStackParamList = AuthStackParamList &
     Login: undefined;
     Demo: NavigatorScreenParams<DemoTabParamList>;
   };
-
-/**
- * This is a list of all the route names that will exit the app if the back button
- * is pressed while in that screen. Only affects Android.
- */
-const exitRoutes = Config.exitRoutes;
 
 export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStackScreenProps<AppStackParamList, T>;
 
@@ -62,8 +55,6 @@ export interface NavigationProps extends Partial<ComponentProps<typeof Navigatio
 export const AppNavigator = observer(function AppNavigator(props: NavigationProps) {
   const { themeScheme, navigationTheme, setThemeContextOverride, ThemeProvider } = useThemeProvider();
   const { authState } = useAuth();
-
-  useBackButtonHandler((routeName) => exitRoutes.includes(routeName));
 
   return (
     <ThemeProvider value={{ themeScheme, setThemeContextOverride }}>

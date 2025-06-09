@@ -1,14 +1,14 @@
-import { useFonts } from '@expo-google-fonts/space-grotesk';
-import { Slot, SplashScreen } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { KeyboardProvider } from 'react-native-keyboard-controller';
+import { useFonts } from "@expo-google-fonts/space-grotesk";
+import { Slot, SplashScreen } from "expo-router";
+import { useEffect, useState } from "react";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 
-import { initI18n } from '@/i18n';
+import { initI18n } from "@/i18n";
 // @mst replace-next-line
-import { useInitialRootStore } from '@/models';
-import { customFontsToLoad } from '@/theme';
-import { loadDateFnsLocale } from '@/utils/formatDate';
-import { useThemeProvider } from '@/utils/useAppTheme';
+import { useInitialRootStore } from "@/models";
+import { customFontsToLoad } from "@/theme";
+import { loadDateFnsLocale } from "@/utils/formatDate";
+import { useThemeProvider } from "@/utils/useAppTheme";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -16,10 +16,8 @@ if (__DEV__) {
   // Load Reactotron configuration in development. We don't want to
   // include this in our production bundle, so we are using `if (__DEV__)`
   // to only execute this in development.
-  require('src/devtools/ReactotronConfig.ts');
+  require("src/devtools/ReactotronConfig.ts");
 }
-
-export { ErrorBoundary } from '@/components/ErrorBoundary/ErrorBoundary';
 
 export default function Root() {
   // @mst remove-block-start
