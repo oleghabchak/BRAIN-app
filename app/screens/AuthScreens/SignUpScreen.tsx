@@ -1,30 +1,30 @@
-import LeftArrowIcon from '@assets/icons/arrow-left.svg';
-import EyeClosedIcon from '@assets/icons/auth/eye_closed.svg';
-import EyeOpenIcon from '@assets/icons/auth/eye_open.svg';
-import EmailVerifiedImage from '@assets/images/email_verified.svg';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { observer } from 'mobx-react-lite';
-import { FC, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';
+import LeftArrowIcon from "@assets/icons/arrow-left.svg";
+import EyeClosedIcon from "@assets/icons/auth/eye_closed.svg";
+import EyeOpenIcon from "@assets/icons/auth/eye_open.svg";
+import EmailVerifiedImage from "@assets/images/email_verified.svg";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { observer } from "mobx-react-lite";
+import { FC, useEffect, useRef, useState } from "react";
+import { ActivityIndicator, TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
 
-import { Button, ListItem, ListView, Screen, Text, TextField } from '@/components';
-import BlurBackground from '@/components/BlurBackground';
-import CustomDropbar from '@/components/CustomDropbar';
-import DateChooser from '@/components/DateChooser';
-import LoadingCircle from '@/components/LoadingCircle';
-import OTPCode from '@/components/OTPCode';
-import StepsPagination from '@/components/StepsPagination';
-import TextWithLink from '@/components/TextWithLink';
-import { Checkbox } from '@/components/Toggle/Checkbox';
-import { useAuth } from '@/contexts/authContext';
-import { AppStackScreenProps } from '@/navigators';
-import { AuthStackParamList } from '@/navigators/AuthNavigator';
-import { type ThemedStyle } from '@/theme';
-import { UserRegistrationInfo } from '@/types/authContext';
-import { useAppTheme } from '@/utils/useAppTheme';
-import { useHeader } from '@/utils/useHeader';
+import { Button, ListItem, ListView, Screen, Text, TextField } from "@/components";
+import BlurBackground from "@/components/BlurBackground";
+import CustomDropbar from "@/components/CustomDropbar";
+import DateChooser from "@/components/DateChooser";
+import LoadingCircle from "@/components/LoadingCircle";
+import OTPCode from "@/components/OTPCode";
+import StepsPagination from "@/components/StepsPagination";
+import TextWithLink from "@/components/TextWithLink";
+import { Checkbox } from "@/components/Toggle/Checkbox";
+import { useAuth } from "@/contexts/authContext";
+import { AppStackScreenProps } from "@/navigators";
+import { AuthStackParamList } from "@/navigators/AuthNavigator";
+import { type ThemedStyle } from "@/theme";
+import { UserRegistrationInfo } from "@/types/authContext";
+import { useAppTheme } from "@/utils/useAppTheme";
+import { useHeader } from "@/utils/useHeader";
 
-interface SignUpScreenProps extends AppStackScreenProps<'SignUp'> {}
+interface SignUpScreenProps extends AppStackScreenProps<"SignUp"> {}
 
 export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScreen(_props) {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
@@ -41,10 +41,10 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   const { userRegistrationInfo, setUserRegistrationInfo, onSignUp, verifyEmail } = useAuth();
   const { step } = userRegistrationInfo;
 
-  const [otpCode, setOtpCode] = useState(Array(6).fill(''));
-  const [registerError, setRegisterError] = useState('');
-  const [termsError, setTermsError] = useState('');
-  const [emailVerificationError, setEmailVerificationError] = useState('');
+  const [otpCode, setOtpCode] = useState(Array(6).fill(""));
+  const [registerError, setRegisterError] = useState("");
+  const [termsError, setTermsError] = useState("");
+  const [emailVerificationError, setEmailVerificationError] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
 
   const {
@@ -64,7 +64,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       const { email, password, c_password } = userRegistrationInfo;
       setIsDisabled(!email || !password || !c_password);
     } else if (step === 3) {
-      setIsDisabled(otpCode.some((el) => el === ''));
+      setIsDisabled(otpCode.some((el) => el === ""));
     }
   };
 
@@ -74,7 +74,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
 
   useHeader(
     {
-      titleTx: 'Sign Up',
+      titleTx: "Sign Up",
       LeftActionComponent: (
         <TouchableOpacity
           onPress={() => {
@@ -94,7 +94,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
 
   const signUp = async () => {
     if (!isTermsChecked || !isPrivacyChecked || !isCookiePolicyChecked) {
-      setTermsError('You need to agree to all terms before register.');
+      setTermsError("You need to agree to all terms before register.");
       return;
     }
     setLoading(true);
@@ -113,14 +113,14 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
     setModalOpen(true);
     setLoading(true);
     const { email } = userRegistrationInfo;
-    const code = otpCode.join('');
+    const code = otpCode.join("");
     const response = await verifyEmail(email, code);
     if (!response.success) {
       setEmailVerificationError(response.message);
       setModalOpen(false);
     } else {
       setTimeout(() => {
-        navigation.navigate('Info');
+        navigation.navigate("Info");
         setModalOpen(false);
       }, 2000);
     }
@@ -128,14 +128,14 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
   };
 
   const getEyeIconColor = (props: any, authPassword: string) => {
-    if (props.status === 'error') return colors.error;
+    if (props.status === "error") return colors.error;
     if (!props.editable) return colors.palette.neutral400;
     return authPassword ? colors.palette.primary500 : colors.palette.neutral700;
   };
 
   return (
     <>
-      <Screen contentContainerStyle={themed($screenContentContainer)} safeAreaEdges={['bottom']}>
+      <Screen contentContainerStyle={themed($screenContentContainer)} safeAreaEdges={["bottom"]}>
         <StepsPagination currentStep={step} />
         {step == 1 && (
           <View style={{ flex: 1 }}>
@@ -156,7 +156,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
             <CustomDropbar
               title="Your Gender"
               placeholder="Please select a gender"
-              options={['Female', 'Male', 'Prefer not to say']}
+              options={["Female", "Male", "Prefer not to say"]}
               value={userRegistrationInfo.gender}
               onChange={(gender) => updateUserRegistrationInfo({ gender })}
             />
@@ -166,7 +166,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         {step == 2 && (
           <View style={{ flex: 1 }}>
             <TextField
-              status={registerError ? 'error' : undefined}
+              status={registerError ? "error" : undefined}
               value={userRegistrationInfo.email}
               onChangeText={(email) => updateUserRegistrationInfo({ email })}
               containerStyle={themed($textField)}
@@ -175,10 +175,10 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
               labelTx="Email"
               placeholderTx="Enter Email"
               placeholderTextColor={registerError ? colors.error : colors.palette.neutral600}
-              onChange={() => registerError && setRegisterError('')}
+              onChange={() => registerError && setRegisterError("")}
             />
             <TextField
-              status={registerError ? 'error' : undefined}
+              status={registerError ? "error" : undefined}
               value={userRegistrationInfo.password}
               onChangeText={(password) => updateUserRegistrationInfo({ password })}
               containerStyle={themed($textField)}
@@ -210,10 +210,10 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
                   </TouchableOpacity>
                 )
               }
-              onChange={() => registerError && setRegisterError('')}
+              onChange={() => registerError && setRegisterError("")}
             />
             <TextField
-              status={registerError ? 'error' : undefined}
+              status={registerError ? "error" : undefined}
               value={userRegistrationInfo.c_password}
               onChangeText={(c_password) => updateUserRegistrationInfo({ c_password })}
               containerStyle={[themed($textField), { marginBottom: 25 }]}
@@ -245,7 +245,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
                   </TouchableOpacity>
                 )
               }
-              onChange={() => registerError && setRegisterError('')}
+              onChange={() => registerError && setRegisterError("")}
             />
 
             <Checkbox
@@ -253,7 +253,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
               checked={isPrivacyChecked}
               onPress={() => {
                 setPrivacyChecked(!isPrivacyChecked);
-                setTermsError('');
+                setTermsError("");
               }}
             >
               <TextWithLink
@@ -268,7 +268,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
               checked={isTermsChecked}
               onPress={() => {
                 setTermsChecked(!isTermsChecked);
-                setTermsError('');
+                setTermsError("");
               }}
             >
               <TextWithLink
@@ -283,7 +283,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
               checked={isCookiePolicyChecked}
               onPress={() => {
                 setCookiePolicyChecked(!isCookiePolicyChecked);
-                setTermsError('');
+                setTermsError("");
               }}
             >
               <TextWithLink
@@ -310,7 +310,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
               style={emailVerificationError ? { borderColor: colors.error, color: colors.error } : undefined}
               otpCode={otpCode}
               setOtpCode={setOtpCode}
-              onChange={() => emailVerificationError && setEmailVerificationError('')}
+              onChange={() => emailVerificationError && setEmailVerificationError("")}
             />
             {emailVerificationError && (
               <Text style={{ fontSize: 12, color: colors.error }}>{emailVerificationError}</Text>
@@ -320,7 +320,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
               style={{ marginTop: 15 }}
               defaultText="Haven't received the verification code?"
               clickableText="Resend it."
-              clickableTextStyles={{ textDecorationLine: 'underline', fontWeight: 700 }}
+              clickableTextStyles={{ textDecorationLine: "underline", fontWeight: 700 }}
             />
 
             <Text style={{ fontSize: 18, marginTop: 50 }}>Having trouble finding your 6-digit code?</Text>
@@ -350,7 +350,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
             }
           }}
         >
-          {loading ? <ActivityIndicator color="white" /> : <>{step == 3 ? 'Submit code' : 'Next'}</>}
+          {loading ? <ActivityIndicator color="white" /> : <>{step == 3 ? "Submit code" : "Next"}</>}
         </Button>
       </Screen>
       {modalOpen && (
@@ -376,7 +376,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
 const $screenContentContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   flex: 1,
   paddingHorizontal: spacing.lg,
-  justifyContent: 'space-between',
+  justifyContent: "space-between",
 });
 
 export const $textField: ThemedStyle<ViewStyle> = ({ spacing }) => ({
@@ -384,14 +384,14 @@ export const $textField: ThemedStyle<ViewStyle> = ({ spacing }) => ({
 });
 
 export const $tapButton: ThemedStyle<ViewStyle> = ({ spacing }) => ({
-  marginTop: spacing.xs,
+  marginBottom: spacing.md,
 });
 
 const $emailVerifiedModal: ViewStyle = {
-  backgroundColor: 'white',
-  alignItems: 'center',
-  width: '90%',
+  backgroundColor: "white",
+  alignItems: "center",
+  width: "90%",
   paddingVertical: 30,
   borderRadius: 16,
-  justifyContent: 'center',
+  justifyContent: "center",
 };
