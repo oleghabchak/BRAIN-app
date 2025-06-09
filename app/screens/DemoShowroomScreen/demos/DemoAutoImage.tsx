@@ -1,51 +1,51 @@
 /* eslint-disable react/jsx-key, react-native/no-inline-styles */
-import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import { Image, ImageStyle, TextStyle, View, ViewStyle } from 'react-native';
 
-import { AutoImage, Text } from "@/components"
-import type { ThemedStyle } from "@/theme"
-import { $styles } from "@/theme"
-import { translate } from "@/i18n"
+import { AutoImage, Text } from '@/components';
+import { translate } from '@/i18n';
+import type { ThemedStyle } from '@/theme';
+import { $styles } from '@/theme';
 
-import { Demo } from "../DemoShowroomScreen"
-import { DemoDivider } from "../DemoDivider"
-import { DemoUseCase } from "../DemoUseCase"
+import { DemoDivider } from '../DemoDivider';
+import { Demo } from '../DemoShowroomScreen';
+import { DemoUseCase } from '../DemoUseCase';
 
 const $imageContainer: ViewStyle = {
-  alignItems: "center",
-}
+  alignItems: 'center',
+};
 
 const $aspectRatioDescription: ThemedStyle<TextStyle> = ({ spacing }) => ({
-  textAlign: "center",
-  width: "100%",
+  textAlign: 'center',
+  width: '100%',
   marginTop: spacing.xs,
-})
+});
 
 const $aspectRatioWidthExampleContainer: ViewStyle = {
-  justifyContent: "space-between",
-}
+  justifyContent: 'space-between',
+};
 
 const $aspectRatioHeightExampleContainer: ViewStyle = {
-  alignItems: "stretch",
-  justifyContent: "space-between",
+  alignItems: 'stretch',
+  justifyContent: 'space-between',
   height: 130,
-}
+};
 
 const $aspectRatioBox: ThemedStyle<ViewStyle & ImageStyle> = (theme) => ({
   borderRadius: 4,
   borderWidth: 3,
   borderColor: theme.colors.palette.secondary300,
   backgroundColor: theme.colors.palette.neutral800,
-})
+});
 
 export const DemoAutoImage: Demo = {
-  name: "AutoImage",
-  description: "demoAutoImage:description",
+  name: 'AutoImage',
+  description: 'demoAutoImage:description',
   data: ({ theme, themed }) => [
     <DemoUseCase name="demoAutoImage:useCase.remoteUri.name">
       <View style={$imageContainer}>
         <AutoImage
           source={{
-            uri: "https://user-images.githubusercontent.com/1775841/184508739-f90d0ce5-7219-42fd-a91f-3382d016eae0.png",
+            uri: 'https://user-images.githubusercontent.com/1775841/184508739-f90d0ce5-7219-42fd-a91f-3382d016eae0.png',
           }}
         />
       </View>
@@ -70,15 +70,15 @@ export const DemoAutoImage: Demo = {
           text="<View />"
           size="xxs"
           weight="bold"
-          style={{ flexBasis: "33.3333%", color: theme.colors.palette.secondary400 }}
+          style={{ flexBasis: '33.3333%', color: theme.colors.palette.secondary400 }}
         />
         <Text
           text="<Image />"
           size="xxs"
           weight="bold"
           style={{
-            flexBasis: "33.3333%",
-            textAlign: "center",
+            flexBasis: '33.3333%',
+            textAlign: 'center',
             color: theme.colors.palette.secondary400,
           }}
         />
@@ -87,8 +87,8 @@ export const DemoAutoImage: Demo = {
           size="xxs"
           weight="bold"
           style={{
-            flexBasis: "33.3333%",
-            textAlign: "right",
+            flexBasis: '33.3333%',
+            textAlign: 'right',
             color: theme.colors.palette.secondary400,
           }}
         />
@@ -100,7 +100,7 @@ export const DemoAutoImage: Demo = {
         <View style={themed([$aspectRatioBox, { width: 60 }])} />
         <Image
           source={{
-            uri: "https://user-images.githubusercontent.com/1775841/188244137-a35ab1b9-658d-4701-b1dd-7caa51173fa9.png",
+            uri: 'https://user-images.githubusercontent.com/1775841/188244137-a35ab1b9-658d-4701-b1dd-7caa51173fa9.png',
           }}
           style={themed([$aspectRatioBox, { width: 60 }])}
           resizeMode="contain"
@@ -109,62 +109,45 @@ export const DemoAutoImage: Demo = {
           maxWidth={60}
           style={themed($aspectRatioBox)}
           source={{
-            uri: "https://user-images.githubusercontent.com/1775841/188244137-a35ab1b9-658d-4701-b1dd-7caa51173fa9.png",
+            uri: 'https://user-images.githubusercontent.com/1775841/188244137-a35ab1b9-658d-4701-b1dd-7caa51173fa9.png',
           }}
         />
       </View>
 
       <Text weight="bold" size="xs" style={themed($aspectRatioDescription)}>
-        {translate("demoAutoImage:useCase.scaledToFitDimensions.heightAuto")}
+        {translate('demoAutoImage:useCase.scaledToFitDimensions.heightAuto')}
       </Text>
 
       <DemoDivider size={40} />
 
       <View style={$styles.row}>
         <View style={$aspectRatioHeightExampleContainer}>
-          <Text
-            text="<View />"
-            size="xxs"
-            weight="bold"
-            style={{ color: theme.colors.palette.secondary400 }}
-          />
-          <Text
-            text="<Image />"
-            size="xxs"
-            weight="bold"
-            style={{ color: theme.colors.palette.secondary400 }}
-          />
-          <Text
-            text="<AutoImage />"
-            size="xxs"
-            weight="bold"
-            style={{ color: theme.colors.palette.secondary400 }}
-          />
+          <Text text="<View />" size="xxs" weight="bold" style={{ color: theme.colors.palette.secondary400 }} />
+          <Text text="<Image />" size="xxs" weight="bold" style={{ color: theme.colors.palette.secondary400 }} />
+          <Text text="<AutoImage />" size="xxs" weight="bold" style={{ color: theme.colors.palette.secondary400 }} />
         </View>
 
-        <View
-          style={[$aspectRatioHeightExampleContainer, { flex: 1, marginStart: theme.spacing.sm }]}
-        >
+        <View style={[$aspectRatioHeightExampleContainer, { flex: 1, marginStart: theme.spacing.sm }]}>
           <View style={themed([$aspectRatioBox, { height: 32 }])} />
           <Image
             source={{
-              uri: "https://user-images.githubusercontent.com/1775841/188244137-a35ab1b9-658d-4701-b1dd-7caa51173fa9.png",
+              uri: 'https://user-images.githubusercontent.com/1775841/188244137-a35ab1b9-658d-4701-b1dd-7caa51173fa9.png',
             }}
             style={themed([$aspectRatioBox, { height: 32 }])}
             resizeMode="contain"
           />
           <AutoImage
             maxHeight={32}
-            style={themed([$aspectRatioBox, { alignSelf: "center" }])}
+            style={themed([$aspectRatioBox, { alignSelf: 'center' }])}
             source={{
-              uri: "https://user-images.githubusercontent.com/1775841/188244137-a35ab1b9-658d-4701-b1dd-7caa51173fa9.png",
+              uri: 'https://user-images.githubusercontent.com/1775841/188244137-a35ab1b9-658d-4701-b1dd-7caa51173fa9.png',
             }}
           />
         </View>
       </View>
 
       <Text weight="bold" size="xs" style={themed($aspectRatioDescription)}>
-        {translate("demoAutoImage:useCase.scaledToFitDimensions.widthAuto")}
+        {translate('demoAutoImage:useCase.scaledToFitDimensions.widthAuto')}
       </Text>
 
       <DemoDivider size={40} />
@@ -174,15 +157,15 @@ export const DemoAutoImage: Demo = {
           text="<View />"
           size="xxs"
           weight="bold"
-          style={{ flexBasis: "33.3333%", color: theme.colors.palette.secondary400 }}
+          style={{ flexBasis: '33.3333%', color: theme.colors.palette.secondary400 }}
         />
         <Text
           text="<Image />"
           size="xxs"
           weight="bold"
           style={{
-            flexBasis: "33.3333%",
-            textAlign: "center",
+            flexBasis: '33.3333%',
+            textAlign: 'center',
             color: theme.colors.palette.secondary400,
           }}
         />
@@ -191,8 +174,8 @@ export const DemoAutoImage: Demo = {
           size="xxs"
           weight="bold"
           style={{
-            flexBasis: "33.3333%",
-            textAlign: "right",
+            flexBasis: '33.3333%',
+            textAlign: 'right',
             color: theme.colors.palette.secondary400,
           }}
         />
@@ -204,7 +187,7 @@ export const DemoAutoImage: Demo = {
         <View style={themed([$aspectRatioBox, { width: 60, height: 60 }])} />
         <Image
           source={{
-            uri: "https://user-images.githubusercontent.com/1775841/188244137-a35ab1b9-658d-4701-b1dd-7caa51173fa9.png",
+            uri: 'https://user-images.githubusercontent.com/1775841/188244137-a35ab1b9-658d-4701-b1dd-7caa51173fa9.png',
           }}
           style={themed([$aspectRatioBox, { width: 60, height: 60 }])}
           resizeMode="contain"
@@ -214,16 +197,16 @@ export const DemoAutoImage: Demo = {
           maxHeight={60}
           style={themed($aspectRatioBox)}
           source={{
-            uri: "https://user-images.githubusercontent.com/1775841/188244137-a35ab1b9-658d-4701-b1dd-7caa51173fa9.png",
+            uri: 'https://user-images.githubusercontent.com/1775841/188244137-a35ab1b9-658d-4701-b1dd-7caa51173fa9.png',
           }}
         />
       </View>
 
       <Text weight="bold" size="xs" style={themed($aspectRatioDescription)}>
-        {translate("demoAutoImage:useCase.scaledToFitDimensions.bothManual")}
+        {translate('demoAutoImage:useCase.scaledToFitDimensions.bothManual')}
       </Text>
     </DemoUseCase>,
   ],
-}
+};
 
 // @demo remove-file

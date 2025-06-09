@@ -14,9 +14,7 @@
     },
     "newArchEnabled": false,
     "jsEngine": "hermes",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "icon": "./assets/images/brainsugar-logo.png",
       "package": "com.brainsugar",
@@ -51,8 +49,5 @@
     "experiments": {
       "tsconfigPaths": true
     }
-  },
-  "ignite": {
-    "version": "UNKNOWN"
   }
 }

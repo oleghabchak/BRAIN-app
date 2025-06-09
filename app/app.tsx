@@ -14,42 +14,43 @@ if (__DEV__) {
   // Load Reactotron in development only.
   // Note that you must be using metro's `inlineRequires` for this to work.
   // If you turn it off in metro.config.js, you'll have to manually import it.
-  require("./devtools/ReactotronConfig.ts");
+  require('./devtools/ReactotronConfig.ts');
 }
-import "./utils/gestureHandler";
-import { useEffect, useState } from "react";
-import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context";
-import { useFonts } from "expo-font";
-import * as Linking from "expo-linking";
-import * as SplashScreen from "expo-splash-screen";
-import { KeyboardProvider } from "react-native-keyboard-controller";
+import './utils/gestureHandler';
 
-import { useInitialRootStore } from "./models"; // @mst remove-current-line
-import { AppNavigator, useNavigationPersistence } from "./navigators";
-import * as storage from "./utils/storage";
-import { customFontsToLoad } from "./theme";
-import { initI18n } from "./i18n";
-import { loadDateFnsLocale } from "./utils/formatDate";
-import { AuthProvider } from "./contexts/authContext";
+import { useFonts } from 'expo-font';
+import * as Linking from 'expo-linking';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect, useState } from 'react';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
+import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
 
-export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE";
+import { AuthProvider } from './contexts/authContext';
+import { initI18n } from './i18n';
+import { useInitialRootStore } from './models'; // @mst remove-current-line
+import { AppNavigator, useNavigationPersistence } from './navigators';
+import { customFontsToLoad } from './theme';
+import { loadDateFnsLocale } from './utils/formatDate';
+import * as storage from './utils/storage';
+
+export const NAVIGATION_PERSISTENCE_KEY = 'NAVIGATION_STATE';
 
 // Web linking configuration
-const prefix = Linking.createURL("/");
+const prefix = Linking.createURL('/');
 const config = {
   screens: {
     Login: {
-      path: "",
+      path: '',
     },
-    Welcome: "welcome",
+    Welcome: 'welcome',
     Demo: {
       screens: {
         DemoShowroom: {
-          path: "showroom/:queryIndex?/:itemIndex?",
+          path: 'showroom/:queryIndex?/:itemIndex?',
         },
-        DemoDebug: "debug",
-        DemoPodcastList: "podcast",
-        DemoCommunity: "community",
+        DemoDebug: 'debug',
+        DemoPodcastList: 'podcast',
+        DemoCommunity: 'community',
       },
     },
   },

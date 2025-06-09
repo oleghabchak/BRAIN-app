@@ -1,7 +1,8 @@
-import { View, ViewStyle, TextInput, StyleProp } from "react-native";
-import { useAppTheme } from "@/utils/useAppTheme";
-import { ThemedStyle } from "@/theme";
-import { useRef } from "react";
+import { useRef } from 'react';
+import { StyleProp, TextInput, View, ViewStyle } from 'react-native';
+
+import { ThemedStyle } from '@/theme';
+import { useAppTheme } from '@/utils/useAppTheme';
 
 interface OTPCodeProps {
   otpCode: string[];
@@ -27,15 +28,15 @@ export default function OTPCode({ otpCode, setOtpCode, style, onChange }: OTPCod
       if (index < otpCode.length - 1) {
         inputRefs.current[index + 1]?.focus();
       }
-    } else if (value === "") {
-      newOtpCode[index] = "";
+    } else if (value === '') {
+      newOtpCode[index] = '';
       setOtpCode(newOtpCode);
     }
   };
 
   const handleKeyPress = (index: number, key: string) => {
-    if (key === "Backspace") {
-      if (otpCode[index] === "") {
+    if (key === 'Backspace') {
+      if (otpCode[index] === '') {
         if (index > 0) {
           inputRefs.current[index - 1]?.focus();
         }
@@ -51,7 +52,7 @@ export default function OTPCode({ otpCode, setOtpCode, style, onChange }: OTPCod
           ref={(el) => (inputRefs.current[index] = el!)}
           style={[
             themed($otpInput),
-            { borderColor: digit !== "" ? colors.palette.primary500 : colors.palette.neutral400 },
+            { borderColor: digit !== '' ? colors.palette.primary500 : colors.palette.neutral400 },
             style,
           ]}
           keyboardType="number-pad"
@@ -71,8 +72,8 @@ export default function OTPCode({ otpCode, setOtpCode, style, onChange }: OTPCod
 }
 
 const $otpContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
-  flexDirection: "row",
-  justifyContent: "center",
+  flexDirection: 'row',
+  justifyContent: 'center',
   marginTop: spacing.lg,
 });
 
@@ -81,7 +82,7 @@ const $otpInput: ThemedStyle<ViewStyle> = ({ colors }) => ({
   borderColor: colors.palette.neutral300,
   borderRadius: 8,
   marginHorizontal: 7,
-  textAlign: "center",
+  textAlign: 'center',
   width: 48,
   height: 48,
   color: colors.palette.primary500,

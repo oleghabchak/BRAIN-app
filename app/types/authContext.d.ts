@@ -1,4 +1,4 @@
-import { ErrorResponse, LoginResponse, RegisterResponse } from "./authResponse";
+import { ErrorResponse, LoginResponse, RegisterResponse } from './authResponse';
 
 export type AuthState = {
   authenticated: boolean | null;

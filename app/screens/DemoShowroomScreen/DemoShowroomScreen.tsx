@@ -1,24 +1,25 @@
 import { Link, RouteProp, useRoute } from "@react-navigation/native";
+import { type ContentStyle } from "@shopify/flash-list";
 import { FC, ReactElement, useCallback, useEffect, useRef, useState } from "react";
 import { Image, ImageStyle, Platform, SectionList, TextStyle, View, ViewStyle } from "react-native";
 import { Drawer } from "react-native-drawer-layout";
-import { type ContentStyle } from "@shopify/flash-list";
 
 import { ListItem, ListView, ListViewRef, Screen, Text } from "@/components";
-import { TxKeyPath, isRTL, translate } from "@/i18n";
+import { isRTL, translate, TxKeyPath } from "@/i18n";
+import { useStores } from "@/models";
 import { DemoTabParamList, DemoTabScreenProps } from "@/navigators/DemoNavigator";
 import type { Theme, ThemedStyle } from "@/theme";
 import { $styles } from "@/theme";
-import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle";
 import { useAppTheme } from "@/utils/useAppTheme";
+import { useHeader } from "@/utils/useHeader";
+import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle";
 
 import * as Demos from "./demos";
 import { DrawerIconButton } from "./DrawerIconButton";
 import SectionListWithKeyboardAwareScrollView from "./SectionListWithKeyboardAwareScrollView";
-import { useHeader } from "@/utils/useHeader";
-import { useStores } from "@/models";
+import { useAuth } from "@/contexts/authContext";
 
-const logo = require("@assets/images/logo.png");
+const logo = require("@assets/images/brainsugar-logo.png");
 
 export interface Demo {
   name: string;
@@ -95,16 +96,14 @@ export const DemoShowroomScreen: FC<DemoTabScreenProps<"DemoShowroom">> = functi
   const route = useRoute<RouteProp<DemoTabParamList, "DemoShowroom">>();
   const params = route.params;
 
-  const {
-    authenticationStore: { logout },
-  } = useStores();
+  const { onLogOut } = useAuth();
 
   useHeader(
     {
       rightTx: "common:logOut",
-      onRightPress: logout,
+      onRightPress: onLogOut,
     },
-    [logout]
+    []
   );
 
   const { themed, theme } = useAppTheme();

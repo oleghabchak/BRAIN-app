@@ -1,12 +1,12 @@
-import { forwardRef, ReactElement, ComponentType } from "react";
-import { StyleProp, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle } from "react-native";
+import { ComponentType, forwardRef, ReactElement } from 'react';
+import { StyleProp, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle } from 'react-native';
 
-import { $styles } from "@/theme";
-import type { ThemedStyle } from "@/theme";
-import { useAppTheme } from "@/utils/useAppTheme";
+import type { ThemedStyle } from '@/theme';
+import { $styles } from '@/theme';
+import { useAppTheme } from '@/utils/useAppTheme';
 
-import { Icon, IconTypes } from "./Icon";
-import { Text, TextProps } from "./Text";
+import { Icon, IconTypes } from './Icon';
+import { Text, TextProps } from './Text';
 
 export interface ListItemProps extends TouchableOpacityProps {
   /**
@@ -27,20 +27,20 @@ export interface ListItemProps extends TouchableOpacityProps {
   /**
    * Text to display if not using `tx` or nested components.
    */
-  text?: TextProps["text"];
+  text?: TextProps['text'];
   /**
    * Text which is looked up via i18n.
    */
-  tx?: TextProps["tx"];
+  tx?: TextProps['tx'];
   /**
    * Children components.
    */
-  children?: TextProps["children"];
+  children?: TextProps['children'];
   /**
    * Optional options to pass to i18n. Useful for interpolation
    * as well as explicitly setting locale or translation fallbacks.
    */
-  txOptions?: TextProps["txOptions"];
+  txOptions?: TextProps['txOptions'];
   /**
    * Optional text style override.
    */
@@ -90,7 +90,7 @@ interface ListItemActionProps {
   iconColor?: string;
   Component?: ReactElement;
   size: number;
-  side: "left" | "right";
+  side: 'left' | 'right';
 }
 
 /**
@@ -181,8 +181,8 @@ function ListItemAction(props: ListItemActionProps) {
         color={iconColor}
         containerStyle={themed([
           $iconContainerStyles,
-          side === "left" && $iconContainerLeft,
-          side === "right" && $iconContainerRight,
+          side === 'left' && $iconContainerLeft,
+          side === 'right' && $iconContainerRight,
           { height: size },
         ])}
       />
@@ -203,14 +203,14 @@ const $separatorBottom: ThemedStyle<ViewStyle> = ({ colors }) => ({
 });
 
 const $textStyle: ThemedStyle<TextStyle> = ({ colors }) => ({
-  alignSelf: "center",
+  alignSelf: 'center',
   flexGrow: 1,
   flexShrink: 1,
   color: colors.palette.neutral600,
 });
 
 const $touchableStyle: ThemedStyle<TextStyle> = ({ colors }) => ({
-  alignItems: "flex-start",
+  alignItems: 'flex-start',
   borderWidth: 1,
   paddingHorizontal: 10,
   marginBottom: 10,
@@ -219,8 +219,8 @@ const $touchableStyle: ThemedStyle<TextStyle> = ({ colors }) => ({
 });
 
 const $iconContainer: ViewStyle = {
-  justifyContent: "center",
-  alignItems: "center",
+  justifyContent: 'center',
+  alignItems: 'center',
   flexGrow: 0,
 };
 const $iconContainerLeft: ThemedStyle<ViewStyle> = ({ spacing }) => ({

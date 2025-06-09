@@ -1,12 +1,13 @@
-import { TextStyle, View, TouchableOpacity, ViewStyle, FlatList } from "react-native";
-import { ListItem } from "./ListItem";
-import { useState } from "react";
-import { Text } from "./Text";
-import { useAppTheme } from "@/utils/useAppTheme";
-import { ThemedStyle } from "@/theme";
-import ArrowUpIcon from "@assets/icons/arrow-up.svg";
-import ArrowDownIcon from "@assets/icons/arrow-down.svg";
-import React from "react";
+import ArrowDownIcon from '@assets/icons/arrow-down.svg';
+import ArrowUpIcon from '@assets/icons/arrow-up.svg';
+import React, { useState } from 'react';
+import { FlatList, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
+
+import { ThemedStyle } from '@/theme';
+import { useAppTheme } from '@/utils/useAppTheme';
+
+import { ListItem } from './ListItem';
+import { Text } from './Text';
 
 interface CustomDropbarProps {
   title?: string;
@@ -108,9 +109,9 @@ const $dropdownList: ThemedStyle<ViewStyle> = ({ colors }) => ({
 });
 
 const $row: ViewStyle = {
-  flexDirection: "row",
-  justifyContent: "space-between",
-  alignItems: "center",
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
 };
 
 const $placeholderText: ThemedStyle<TextStyle> = ({ colors }) => ({

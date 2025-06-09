@@ -3,15 +3,15 @@ import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navig
 import { observer } from "mobx-react-lite";
 import { ComponentProps, useEffect, useRef } from "react";
 
-import * as Screens from "@/screens";
 import Config from "@/config";
+import { useAuth } from "@/contexts/authContext";
 import { useStores } from "@/models";
+import * as Screens from "@/screens";
 import { useAppTheme, useThemeProvider } from "@/utils/useAppTheme";
 
+import AuthNavigator, { AuthStackParamList } from "./AuthNavigator";
 import { DemoNavigator, DemoTabParamList } from "./DemoNavigator";
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities";
-import AuthNavigator, { AuthStackParamList } from "./AuthNavigator";
-import { useAuth } from "@/contexts/authContext";
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator

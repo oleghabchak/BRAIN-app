@@ -1,5 +1,6 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import * as Screens from "@/screens";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import * as Screens from '@/screens';
 
 export type AuthStackParamList = {
   Auth: undefined;

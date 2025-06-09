@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios';
 
-const API_BASE_URL = "https://www.brainsugar.co/api";
+const API_BASE_URL = 'https://www.brainsugar.co/api';
 
 let token: string | null = null;
 
@@ -25,7 +25,7 @@ export const createAxiosClient = () => {
   client.interceptors.response.use(
     (response) => response,
     (error) => {
-      console.log("❌ API Error:", {
+      console.log('❌ API Error:', {
         url: error.config?.url,
         message: error.message,
         status: error.response?.status,
@@ -34,7 +34,7 @@ export const createAxiosClient = () => {
       if (error.response?.status === 401) {
       }
 
-      return Promise.reject(error?.response?.data?.message || "Something went wrong. Please try again.");
+      return Promise.reject(error?.response?.data?.message || 'Something went wrong. Please try again.');
     }
   );
 
