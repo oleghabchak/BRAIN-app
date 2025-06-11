@@ -211,7 +211,6 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
         <TextInput
           ref={input}
           underlineColorAndroid={colors.transparent}
-          textAlignVertical="top"
           placeholder={placeholderContent}
           placeholderTextColor={disabled ? colors.palette.neutral400 : colors.textDim}
           {...TextInputProps}
@@ -269,11 +268,8 @@ const $inputStyle: ThemedStyle<ViewStyle> = ({ colors, typography, spacing }) =>
   fontFamily: typography.primary.normal,
   color: colors.text,
   fontSize: 16,
-  height: 34,
+  height: 46,
   // https://github.com/facebook/react-native/issues/21720#issuecomment-532642093
-
-  marginVertical: spacing.xs,
-  marginTop: 6,
   marginHorizontal: spacing.sm,
 });
 

@@ -1,27 +1,28 @@
+import LeftArrowIcon from "@assets/icons/arrow-left.svg";
+import EyeClosedIcon from "@assets/icons/auth/eye_closed.svg";
+import EyeOpenIcon from "@assets/icons/auth/eye_open.svg";
+import EmailVerifiedImage from "@assets/images/email_verified.svg";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { observer } from "mobx-react-lite";
 import { FC, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
-import { observer } from "mobx-react-lite";
+
 import { Button, ListItem, ListView, Screen, Text, TextField } from "@/components";
+import BlurBackground from "@/components/BlurBackground";
+import CustomDropbar from "@/components/CustomDropbar";
+import DateChooser from "@/components/DateChooser";
+import LoadingCircle from "@/components/LoadingCircle";
+import OTPCode from "@/components/OTPCode";
+import StepsPagination from "@/components/StepsPagination";
+import TextWithLink from "@/components/TextWithLink";
+import { Checkbox } from "@/components/Toggle/Checkbox";
+import { useAuth } from "@/contexts/authContext";
 import { AppStackScreenProps } from "@/navigators";
+import { AuthStackParamList } from "@/navigators/AuthNavigator";
 import { type ThemedStyle } from "@/theme";
+import { UserRegistrationInfo } from "@/types/authContext";
 import { useAppTheme } from "@/utils/useAppTheme";
 import { useHeader } from "@/utils/useHeader";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { AuthStackParamList } from "@/navigators/AuthNavigator";
-import LeftArrowIcon from "@assets/icons/arrow-left.svg";
-import BlurBackground from "@/components/BlurBackground";
-import LoadingCircle from "@/components/LoadingCircle";
-import DateChooser from "@/components/DateChooser";
-import CustomDropbar from "@/components/CustomDropbar";
-import { useAuth } from "@/contexts/authContext";
-import StepsPagination from "@/components/StepsPagination";
-import EyeOpenIcon from "@assets/icons/auth/eye_open.svg";
-import EyeClosedIcon from "@assets/icons/auth/eye_closed.svg";
-import { Checkbox } from "@/components/Toggle/Checkbox";
-import { UserRegistrationInfo } from "@/types/authContext";
-import OTPCode from "@/components/OTPCode";
-import TextWithLink from "@/components/TextWithLink";
-import EmailVerifiedImage from "@assets/images/email_verified.svg";
 
 interface SignUpScreenProps extends AppStackScreenProps<"SignUp"> {}
 
@@ -383,7 +384,7 @@ export const $textField: ThemedStyle<ViewStyle> = ({ spacing }) => ({
 });
 
 export const $tapButton: ThemedStyle<ViewStyle> = ({ spacing }) => ({
-  marginTop: spacing.xs,
+  marginBottom: spacing.md,
 });
 
 const $emailVerifiedModal: ViewStyle = {

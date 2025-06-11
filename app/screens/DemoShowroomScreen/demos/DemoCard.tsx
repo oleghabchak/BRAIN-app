@@ -1,18 +1,15 @@
 /* eslint-disable react/jsx-key, react-native/no-inline-styles */
-import { AutoImage, Button, Card, Icon } from "@/components"
+import { AutoImage, Button, Card, Icon } from '@/components';
 
-import { Demo } from "../DemoShowroomScreen"
-import { DemoDivider } from "../DemoDivider"
-import { DemoUseCase } from "../DemoUseCase"
+import { DemoDivider } from '../DemoDivider';
+import { Demo } from '../DemoShowroomScreen';
+import { DemoUseCase } from '../DemoUseCase';
 
 export const DemoCard: Demo = {
-  name: "Card",
-  description: "demoCard:description",
+  name: 'Card',
+  description: 'demoCard:description',
   data: ({ theme }) => [
-    <DemoUseCase
-      name="demoCard:useCase.presets.name"
-      description="demoCard:useCase.presets.description"
-    >
+    <DemoUseCase name="demoCard:useCase.presets.name" description="demoCard:useCase.presets.description">
       <Card
         headingTx="demoCard:useCase.presets.default.heading"
         contentTx="demoCard:useCase.presets.default.content"
@@ -65,10 +62,7 @@ export const DemoCard: Demo = {
       />
     </DemoUseCase>,
 
-    <DemoUseCase
-      name="demoCard:useCase.passingContent.name"
-      description="demoCard:useCase.passingContent.description"
-    >
+    <DemoUseCase name="demoCard:useCase.passingContent.name" description="demoCard:useCase.passingContent.description">
       <Card
         headingTx="demoCard:useCase.passingContent.heading"
         contentTx="demoCard:useCase.passingContent.content"
@@ -78,11 +72,11 @@ export const DemoCard: Demo = {
       <Card
         preset="reversed"
         headingTx="demoShowroomScreen:demoViaSpecifiedTxProp"
-        headingTxOptions={{ prop: "heading" }}
+        headingTxOptions={{ prop: 'heading' }}
         contentTx="demoShowroomScreen:demoViaSpecifiedTxProp"
-        contentTxOptions={{ prop: "content" }}
+        contentTxOptions={{ prop: 'content' }}
         footerTx="demoShowroomScreen:demoViaSpecifiedTxProp"
-        footerTxOptions={{ prop: "footer" }}
+        footerTxOptions={{ prop: 'footer' }}
       />
     </DemoUseCase>,
 
@@ -121,9 +115,9 @@ export const DemoCard: Demo = {
           <AutoImage
             maxWidth={80}
             maxHeight={60}
-            style={{ alignSelf: "center" }}
+            style={{ alignSelf: 'center' }}
             source={{
-              uri: "https://user-images.githubusercontent.com/1775841/184508739-f90d0ce5-7219-42fd-a91f-3382d016eae0.png",
+              uri: 'https://user-images.githubusercontent.com/1775841/184508739-f90d0ce5-7219-42fd-a91f-3382d016eae0.png',
             }}
           />
         }
@@ -137,19 +131,16 @@ export const DemoCard: Demo = {
           <AutoImage
             maxWidth={80}
             maxHeight={60}
-            style={{ alignSelf: "center" }}
+            style={{ alignSelf: 'center' }}
             source={{
-              uri: "https://user-images.githubusercontent.com/1775841/184508739-f90d0ce5-7219-42fd-a91f-3382d016eae0.png",
+              uri: 'https://user-images.githubusercontent.com/1775841/184508739-f90d0ce5-7219-42fd-a91f-3382d016eae0.png',
             }}
           />
         }
       />
     </DemoUseCase>,
 
-    <DemoUseCase
-      name="demoCard:useCase.style.name"
-      description="demoCard:useCase.style.description"
-    >
+    <DemoUseCase name="demoCard:useCase.style.name" description="demoCard:useCase.style.description">
       <Card
         headingTx="demoCard:useCase.style.heading"
         headingStyle={{ color: theme.colors.error }}
@@ -160,8 +151,8 @@ export const DemoCard: Demo = {
         }}
         footerTx="demoCard:useCase.style.footer"
         footerStyle={{
-          textDecorationLine: "underline line-through",
-          textDecorationStyle: "dashed",
+          textDecorationLine: 'underline line-through',
+          textDecorationStyle: 'dashed',
           color: theme.colors.error,
           textDecorationColor: theme.colors.error,
         }}
@@ -173,6 +164,6 @@ export const DemoCard: Demo = {
       />
     </DemoUseCase>,
   ],
-}
+};
 
 // @demo remove-file

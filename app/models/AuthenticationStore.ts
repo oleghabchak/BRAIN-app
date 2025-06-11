@@ -1,10 +1,10 @@
-import { Instance, SnapshotOut, types } from "mobx-state-tree";
+import { Instance, SnapshotOut, types } from 'mobx-state-tree';
 
 export const AuthenticationStoreModel = types
-  .model("AuthenticationStore")
+  .model('AuthenticationStore')
   .props({
     authToken: types.maybe(types.string),
-    authEmail: "",
+    authEmail: '',
   })
   .views((store) => ({
     get isAuthenticated() {
@@ -23,11 +23,11 @@ export const AuthenticationStoreModel = types
       store.authToken = value;
     },
     setAuthEmail(value: string) {
-      store.authEmail = value.replace(/ /g, "");
+      store.authEmail = value.replace(/ /g, '');
     },
     logout() {
       store.authToken = undefined;
-      store.authEmail = "";
+      store.authEmail = '';
     },
   }));
 

@@ -1,12 +1,14 @@
-import { TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
-import React, { useState } from "react";
-import DatePicker from "react-native-date-picker";
-import { Text } from "./Text";
-import { useAppTheme } from "@/utils/useAppTheme";
-import { ThemedStyle } from "@/theme";
-import { formatDate } from "@/utils/formatDate";
+import React, { useState } from 'react';
+import { TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
+import DatePicker from 'react-native-date-picker';
 
-type Mode = "date" | "time" | "datetime";
+import { ThemedStyle } from '@/theme';
+import { formatDate } from '@/utils/formatDate';
+import { useAppTheme } from '@/utils/useAppTheme';
+
+import { Text } from './Text';
+
+type Mode = 'date' | 'time' | 'datetime';
 
 interface DatePickerProps {
   mode?: Mode;
@@ -16,7 +18,7 @@ interface DatePickerProps {
   onChange: (date: Date) => void;
 }
 
-export default function DateChooser({ mode = "date", title, styles, value, onChange }: DatePickerProps) {
+export default function DateChooser({ mode = 'date', title, styles, value, onChange }: DatePickerProps) {
   const [open, setOpen] = useState(false);
   const { themed } = useAppTheme();
 
@@ -73,23 +75,23 @@ const $dateChooserContainer: ThemedStyle<ViewStyle> = ({ colors, spacing }) => (
   borderColor: colors.palette.neutral600,
   borderRadius: 16,
   padding: 23,
-  alignItems: "center",
+  alignItems: 'center',
   marginBottom: spacing.md,
 });
 
 const $dateRow: ViewStyle = {
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-evenly",
-  width: "100%",
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-evenly',
+  width: '100%',
 };
 
 const $dateText: ThemedStyle<TextStyle> = ({ colors }) => ({
   fontSize: 16,
-  fontWeight: "600",
+  fontWeight: '600',
   color: colors.palette.primary500,
   minWidth: 50,
-  textAlign: "center",
+  textAlign: 'center',
 });
 
 const $divider: ThemedStyle<TextStyle> = ({ colors }) => ({

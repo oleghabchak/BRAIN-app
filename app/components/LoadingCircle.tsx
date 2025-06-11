@@ -1,8 +1,10 @@
-import { Animated } from "react-native";
-import Svg from "react-native-svg";
-import { AnimatedCircle } from "./BlurBackground";
-import { useAppTheme } from "@/utils/useAppTheme";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
+import { Animated } from 'react-native';
+import Svg from 'react-native-svg';
+
+import { useAppTheme } from '@/utils/useAppTheme';
+
+import { AnimatedCircle } from './BlurBackground';
 
 export default function LoadingCircle() {
   const {
@@ -26,7 +28,7 @@ export default function LoadingCircle() {
 
   const spin = rotateAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"],
+    outputRange: ['0deg', '360deg'],
   });
 
   return (

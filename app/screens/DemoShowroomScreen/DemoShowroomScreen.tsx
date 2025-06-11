@@ -1,24 +1,25 @@
-import { Link, RouteProp, useRoute } from "@react-navigation/native";
-import { FC, ReactElement, useCallback, useEffect, useRef, useState } from "react";
-import { Image, ImageStyle, Platform, SectionList, TextStyle, View, ViewStyle } from "react-native";
-import { Drawer } from "react-native-drawer-layout";
-import { type ContentStyle } from "@shopify/flash-list";
+import { Link, RouteProp, useRoute } from '@react-navigation/native';
+import { type ContentStyle } from '@shopify/flash-list';
+import { FC, ReactElement, useCallback, useEffect, useRef, useState } from 'react';
+import { Image, ImageStyle, Platform, SectionList, TextStyle, View, ViewStyle } from 'react-native';
+import { Drawer } from 'react-native-drawer-layout';
 
-import { ListItem, ListView, ListViewRef, Screen, Text } from "@/components";
-import { TxKeyPath, isRTL, translate } from "@/i18n";
-import { DemoTabParamList, DemoTabScreenProps } from "@/navigators/DemoNavigator";
-import type { Theme, ThemedStyle } from "@/theme";
-import { $styles } from "@/theme";
-import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle";
-import { useAppTheme } from "@/utils/useAppTheme";
+import { ListItem, ListView, ListViewRef, Screen, Text } from '@/components';
+import { useAuth } from '@/contexts/authContext';
+import { isRTL, translate, TxKeyPath } from '@/i18n';
+import { useStores } from '@/models';
+import { DemoTabParamList, DemoTabScreenProps } from '@/navigators/DemoNavigator';
+import type { Theme, ThemedStyle } from '@/theme';
+import { $styles } from '@/theme';
+import { useAppTheme } from '@/utils/useAppTheme';
+import { useHeader } from '@/utils/useHeader';
+import { useSafeAreaInsetsStyle } from '@/utils/useSafeAreaInsetsStyle';
 
-import * as Demos from "./demos";
-import { DrawerIconButton } from "./DrawerIconButton";
-import SectionListWithKeyboardAwareScrollView from "./SectionListWithKeyboardAwareScrollView";
-import { useHeader } from "@/utils/useHeader";
-import { useStores } from "@/models";
+import * as Demos from './demos';
+import { DrawerIconButton } from './DrawerIconButton';
+import SectionListWithKeyboardAwareScrollView from './SectionListWithKeyboardAwareScrollView';
 
-const logo = require("@assets/images/logo.png");
+const logo = require('@assets/images/brainsugar-logo.png');
 
 export interface Demo {
   name: string;
@@ -36,9 +37,9 @@ const slugify = (str: string) =>
   str
     .toLowerCase()
     .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 
 const WebListItem: FC<DemoListItem> = ({ item, sectionIndex }) => {
   const sectionSlug = item.name.toLowerCase();
@@ -77,7 +78,7 @@ const NativeListItem: FC<DemoListItem> = ({ item, sectionIndex, handleScroll }) 
           key={`section${sectionIndex}-${u}`}
           onPress={() => handleScroll?.(sectionIndex, index)}
           text={u}
-          rightIcon={isRTL ? "caretLeft" : "caretRight"}
+          rightIcon={isRTL ? 'caretLeft' : 'caretRight'}
         />
       ))}
     </View>
@@ -85,26 +86,24 @@ const NativeListItem: FC<DemoListItem> = ({ item, sectionIndex, handleScroll }) 
 };
 
 const ShowroomListItem = Platform.select({ web: WebListItem, default: NativeListItem });
-const isAndroid = Platform.OS === "android";
+const isAndroid = Platform.OS === 'android';
 
-export const DemoShowroomScreen: FC<DemoTabScreenProps<"DemoShowroom">> = function DemoShowroomScreen(_props) {
+export const DemoShowroomScreen: FC<DemoTabScreenProps<'DemoShowroom'>> = function DemoShowroomScreen(_props) {
   const [open, setOpen] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout>>();
   const listRef = useRef<SectionList>(null);
-  const menuRef = useRef<ListViewRef<DemoListItem["item"]>>(null);
-  const route = useRoute<RouteProp<DemoTabParamList, "DemoShowroom">>();
+  const menuRef = useRef<ListViewRef<DemoListItem['item']>>(null);
+  const route = useRoute<RouteProp<DemoTabParamList, 'DemoShowroom'>>();
   const params = route.params;
 
-  const {
-    authenticationStore: { logout },
-  } = useStores();
+  const { onLogOut } = useAuth();
 
   useHeader(
     {
-      rightTx: "common:logOut",
-      onRightPress: logout,
+      rightTx: 'common:logOut',
+      onRightPress: onLogOut,
     },
-    [logout]
+    []
   );
 
   const { themed, theme } = useAppTheme();
@@ -170,7 +169,7 @@ export const DemoShowroomScreen: FC<DemoTabScreenProps<"DemoShowroom">> = functi
     return () => timeout.current && clearTimeout(timeout.current);
   }, []);
 
-  const $drawerInsets = useSafeAreaInsetsStyle(["top"]);
+  const $drawerInsets = useSafeAreaInsetsStyle(['top']);
 
   return (
     <Drawer
@@ -178,13 +177,13 @@ export const DemoShowroomScreen: FC<DemoTabScreenProps<"DemoShowroom">> = functi
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
       drawerType="back"
-      drawerPosition={isRTL ? "right" : "left"}
+      drawerPosition={isRTL ? 'right' : 'left'}
       renderDrawerContent={() => (
         <View style={themed([$drawer, $drawerInsets])}>
           <View style={themed($logoContainer)}>
             <Image source={logo} style={$logoImage} />
           </View>
-          <ListView<DemoListItem["item"]>
+          <ListView<DemoListItem['item']>
             ref={menuRef}
             contentContainerStyle={themed($listContentContainer)}
             estimatedItemSize={250}
@@ -202,7 +201,7 @@ export const DemoShowroomScreen: FC<DemoTabScreenProps<"DemoShowroom">> = functi
     >
       <Screen
         preset="fixed"
-        safeAreaEdges={["top"]}
+        safeAreaEdges={['top']}
         contentContainerStyle={$styles.flex1}
         {...(isAndroid ? { KeyboardAvoidingViewProps: { behavior: undefined } } : {})}
       >
@@ -270,8 +269,8 @@ const $logoImage: ImageStyle = {
 };
 
 const $logoContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
-  alignSelf: "flex-start",
-  justifyContent: "center",
+  alignSelf: 'flex-start',
+  justifyContent: 'center',
   height: 56,
   paddingHorizontal: spacing.lg,
 });

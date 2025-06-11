@@ -1,10 +1,10 @@
-import { ExpoConfig, ConfigContext } from "@expo/config"
+import { ConfigContext, ExpoConfig } from '@expo/config';
 
 /**
  * Use ts-node here so we can use TypeScript for our Config Plugins
  * and not have to compile them to JavaScript
  */
-require("ts-node/register")
+require('ts-node/register');
 
 /**
  * @param config ExpoConfig coming from the static config app.json if it exists
@@ -13,7 +13,7 @@ require("ts-node/register")
  * https://docs.expo.dev/workflow/configuration/#configuration-resolution-rules
  */
 module.exports = ({ config }: ConfigContext): Partial<ExpoConfig> => {
-  const existingPlugins = config.plugins ?? []
+  const existingPlugins = config.plugins ?? [];
 
   return {
     ...config,
@@ -28,12 +28,12 @@ module.exports = ({ config }: ConfigContext): Partial<ExpoConfig> => {
       privacyManifests: {
         NSPrivacyAccessedAPITypes: [
           {
-            NSPrivacyAccessedAPIType: "NSPrivacyAccessedAPICategoryUserDefaults",
-            NSPrivacyAccessedAPITypeReasons: ["CA92.1"], // CA92.1 = "Access info from same app, per documentation"
+            NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryUserDefaults',
+            NSPrivacyAccessedAPITypeReasons: ['CA92.1'], // CA92.1 = "Access info from same app, per documentation"
           },
         ],
       },
     },
-    plugins: [...existingPlugins, require("./plugins/withSplashScreen").withSplashScreen],
-  }
-}
+    plugins: [...existingPlugins, require('./plugins/withSplashScreen').withSplashScreen],
+  };
+};

@@ -1,6 +1,7 @@
-import { AxiosInstance } from "axios";
-import { createAxiosClient } from "./client";
-import type { ApiResult } from "./types";
+import { AxiosInstance } from 'axios';
+
+import { createAxiosClient } from './client';
+import type { ApiResult } from './types';
 
 class ApiService {
   private client: AxiosInstance;

@@ -1,25 +1,25 @@
-import { observer } from "mobx-react-lite"; // @mst remove-current-line
-import { FC, useEffect, useRef } from "react";
-import { Animated, Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native";
+import { observer } from 'mobx-react-lite'; // @mst remove-current-line
+import { FC, useEffect, useRef } from 'react';
+import { Animated, Image, ImageStyle, TextStyle, View, ViewStyle } from 'react-native';
 
 import {
   Button, // @demo remove-current-line
-  Text,
   Screen,
-} from "@/components";
-import { isRTL } from "@/i18n";
-import { useStores } from "@/models"; // @demo remove-current-line
-import { AppStackScreenProps } from "@/navigators";
-import { $styles, type ThemedStyle } from "@/theme";
-import { useHeader } from "@/utils/useHeader"; // @demo remove-current-line
-import { useSafeAreaInsetsStyle } from "@/utils/useSafeAreaInsetsStyle";
-import { useAppTheme } from "@/utils/useAppTheme";
-import { useAuth } from "@/contexts/authContext";
+  Text,
+} from '@/components';
+import { useAuth } from '@/contexts/authContext';
+import { isRTL } from '@/i18n';
+import { useStores } from '@/models'; // @demo remove-current-line
+import { AppStackScreenProps } from '@/navigators';
+import { $styles, type ThemedStyle } from '@/theme';
+import { useAppTheme } from '@/utils/useAppTheme';
+import { useHeader } from '@/utils/useHeader'; // @demo remove-current-line
+import { useSafeAreaInsetsStyle } from '@/utils/useSafeAreaInsetsStyle';
 
-const welcomeLogo = require("@assets/images/logo.png");
-const welcomeFace = require("@assets/images/welcome-face.png");
+const welcomeLogo = require('@assets/images/brainsugar-logo.png');
+const welcomeFace = require('@assets/images/welcome-face.png');
 
-interface WelcomeScreenProps extends AppStackScreenProps<"Welcome"> {}
+interface WelcomeScreenProps extends AppStackScreenProps<'Welcome'> {}
 
 // @mst replace-next-line export const WelcomeScreen: FC<WelcomeScreenProps> = (
 export const WelcomeScreen: FC<WelcomeScreenProps> = observer(
@@ -34,7 +34,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(
     const { onLogOut } = useAuth();
 
     function goNext() {
-      navigation.navigate("Demo", { screen: "DemoShowroom", params: {} });
+      navigation.navigate('Demo', { screen: 'DemoShowroom', params: {} });
     }
 
     useEffect(() => {
@@ -47,14 +47,14 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(
 
     useHeader(
       {
-        rightTx: "common:logOut",
+        rightTx: 'common:logOut',
         onRightPress: onLogOut,
       },
       [onLogOut]
     );
     // @demo remove-block-end
 
-    const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"]);
+    const $bottomContainerInsets = useSafeAreaInsetsStyle(['bottom']);
 
     return (
       <Screen preset="fixed" contentContainerStyle={$styles.flex1}>
@@ -92,32 +92,32 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(
 const $topContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   flexShrink: 1,
   flexGrow: 1,
-  flexBasis: "57%",
-  justifyContent: "center",
+  flexBasis: '57%',
+  justifyContent: 'center',
   paddingHorizontal: spacing.lg,
 });
 
 const $bottomContainer: ThemedStyle<ViewStyle> = ({ colors, spacing }) => ({
   flexShrink: 1,
   flexGrow: 0,
-  flexBasis: "43%",
+  flexBasis: '43%',
   backgroundColor: colors.palette.neutral100,
   borderTopLeftRadius: 16,
   borderTopRightRadius: 16,
   paddingHorizontal: spacing.lg,
-  justifyContent: "space-around",
+  justifyContent: 'space-around',
 });
 
 const $welcomeLogo: ThemedStyle<ImageStyle> = ({ spacing }) => ({
   height: 88,
-  width: "100%",
+  width: '100%',
   marginBottom: spacing.xxl,
 });
 
 const $welcomeFace: ImageStyle = {
   height: 169,
   width: 269,
-  position: "absolute",
+  position: 'absolute',
   bottom: -47,
   right: -80,
   transform: [{ scaleX: isRTL ? -1 : 1 }],

@@ -1,14 +1,15 @@
-import { Animated, TextStyle, View, ViewStyle } from "react-native";
-import { Button, Screen, Text } from "@/components";
-import type { ThemedStyle } from "@/theme";
-import { useAppTheme } from "@/utils/useAppTheme";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { AuthStackParamList } from "@/navigators/AuthNavigator";
-import { FC, useEffect, useRef } from "react";
-import GreenBrainImage from "@assets/images/brainsugar-green.svg";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import GreenBrainImage from '@assets/images/brainsugar-green.svg';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { FC, useEffect, useRef } from 'react';
+import { Animated, TextStyle, View, ViewStyle } from 'react-native';
 
-type AuthScreenProps = NativeStackScreenProps<AuthStackParamList, "Auth">;
+import { Button, Screen, Text } from '@/components';
+import { AuthStackParamList } from '@/navigators/AuthNavigator';
+import type { ThemedStyle } from '@/theme';
+import { useAppTheme } from '@/utils/useAppTheme';
+
+type AuthScreenProps = NativeStackScreenProps<AuthStackParamList, 'Auth'>;
 
 export const AuthScreen: FC<AuthScreenProps> = () => {
   const { themed } = useAppTheme();
@@ -24,7 +25,7 @@ export const AuthScreen: FC<AuthScreenProps> = () => {
   }, []);
 
   return (
-    <Screen preset="auto" contentContainerStyle={themed($screenContentContainer)} safeAreaEdges={["top", "bottom"]}>
+    <Screen preset="auto" contentContainerStyle={themed($screenContentContainer)} safeAreaEdges={['top', 'bottom']}>
       <Animated.View style={{ opacity: fadeAnim, flex: 1 }}>
         <View style={themed($centerContent)}>
           <GreenBrainImage width={100} height={100} />
@@ -32,14 +33,14 @@ export const AuthScreen: FC<AuthScreenProps> = () => {
             Welcome to Brainsugar
           </Text>
           <Text style={themed($authDescription)}>
-            This space is designed to help you understand{"\n"}your anger, manage it in healthy ways, and{"\n"}build
+            This space is designed to help you understand{'\n'}your anger, manage it in healthy ways, and{'\n'}build
             emotional balance over time.
           </Text>
         </View>
 
         <View style={themed($buttonContainer)}>
-          <Button onPress={() => navigation.navigate("SignUp")}>Sign up</Button>
-          <Button preset="outline" onPress={() => navigation.navigate("Login")}>
+          <Button onPress={() => navigation.navigate('SignUp')}>Sign up</Button>
+          <Button preset="outline" onPress={() => navigation.navigate('Login')}>
             Log in
           </Button>
         </View>
@@ -51,18 +52,18 @@ export const AuthScreen: FC<AuthScreenProps> = () => {
 const $screenContentContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   paddingHorizontal: spacing.lg,
   flex: 1,
-  justifyContent: "space-between",
+  justifyContent: 'space-between',
 });
 
 const $centerContent: ThemedStyle<ViewStyle> = () => ({
   flex: 1,
-  justifyContent: "center",
-  alignItems: "center",
+  justifyContent: 'center',
+  alignItems: 'center',
   rowGap: 10,
 });
 
 const $buttonContainer: ThemedStyle<ViewStyle> = () => ({
-  width: "100%",
+  width: '100%',
   rowGap: 10,
 });
 
@@ -72,7 +73,7 @@ const $authTitle: ThemedStyle<TextStyle> = () => ({
 });
 
 const $authDescription: ThemedStyle<TextStyle> = ({ colors }) => ({
-  textAlign: "center",
+  textAlign: 'center',
   color: colors.palette.neutral600,
   fontSize: 15,
   lineHeight: 25,

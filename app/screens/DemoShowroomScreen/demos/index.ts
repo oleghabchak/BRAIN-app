@@ -1,12 +1,12 @@
-export * from "./DemoIcon"
-export * from "./DemoTextField"
-export * from "./DemoToggle"
-export * from "./DemoButton"
-export * from "./DemoListItem"
-export * from "./DemoCard"
-export * from "./DemoAutoImage"
-export * from "./DemoText"
-export * from "./DemoHeader"
-export * from "./DemoEmptyState"
+export * from './DemoAutoImage';
+export * from './DemoButton';
+export * from './DemoCard';
+export * from './DemoEmptyState';
+export * from './DemoHeader';
+export * from './DemoIcon';
+export * from './DemoListItem';
+export * from './DemoText';
+export * from './DemoTextField';
+export * from './DemoToggle';
 
 // @demo remove-file

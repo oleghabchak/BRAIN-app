@@ -1,19 +1,20 @@
-import { useAppTheme } from "@/utils/useAppTheme";
-import { View } from "react-native";
+import { View } from 'react-native';
+
+import { useAppTheme } from '@/utils/useAppTheme';
 
 export default function StepsPagination({ currentStep }: { currentStep: number }) {
   const {
     theme: { colors },
   } = useAppTheme();
   return (
-    <View style={{ alignItems: "center" }}>
+    <View style={{ alignItems: 'center' }}>
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "center",
+          flexDirection: 'row',
+          justifyContent: 'center',
           marginVertical: 30,
           gap: 8,
-          width: "50%",
+          width: '50%',
         }}
       >
         {[1, 2, 3].map((step) => (
