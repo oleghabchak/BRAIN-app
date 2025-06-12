@@ -202,12 +202,12 @@ export const DemoShowroomScreen: FC<DemoTabScreenProps<'DemoShowroom'>> = functi
       <Screen
         preset="fixed"
         safeAreaEdges={['top']}
-        contentContainerStyle={$styles.flex1}
+        contentContainerStyle={$styles.container}
         {...(isAndroid ? { KeyboardAvoidingViewProps: { behavior: undefined } } : {})}
       >
-        <DrawerIconButton onPress={toggleDrawer} />
-
-        <SectionListWithKeyboardAwareScrollView
+         <Text preset="heading" tx="Home" style={themed($title)} />
+   
+        {/* <SectionListWithKeyboardAwareScrollView
           ref={listRef}
           contentContainerStyle={themed($sectionListContentContainer)}
           stickySectionHeadersEnabled={false}
@@ -240,7 +240,7 @@ export const DemoShowroomScreen: FC<DemoTabScreenProps<'DemoShowroom'>> = functi
               </View>
             );
           }}
-        />
+        /> */}
       </Screen>
     </Drawer>
   );
@@ -249,6 +249,10 @@ export const DemoShowroomScreen: FC<DemoTabScreenProps<'DemoShowroom'>> = functi
 const $drawer: ThemedStyle<ViewStyle> = ({ colors }) => ({
   backgroundColor: colors.background,
   flex: 1,
+});
+
+const $title: ThemedStyle<TextStyle> = ({ spacing }) => ({
+  marginBottom: spacing.sm,
 });
 
 const $listContentContainer: ThemedStyle<ContentStyle> = ({ spacing }) => ({
@@ -282,7 +286,7 @@ const $menuContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
 
 const $demoItemName: ThemedStyle<TextStyle> = ({ spacing }) => ({
   fontSize: 24,
-  marginBottom: spacing.md,
+  marginBottom: spacing.lg,
 });
 
 const $demoItemDescription: ThemedStyle<TextStyle> = ({ spacing }) => ({

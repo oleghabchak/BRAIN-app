@@ -19,3 +19,24 @@ export interface ErrorResponse {
   success: boolean;
   message: string;
 }
+export interface AuthResponse {
+  success: boolean;
+  data?: SuccessData;
+  message?: string;
+  email_verification_token?: string;
+} 
+
+export interface ForgotPasswordResponse {
+  success: boolean;
+  message?: string;
+}
+
+export interface VerifyOtpResponse {
+  success: boolean;
+  message?: string;
+}
+
+export interface ResetPasswordResponse {
+  success: boolean;
+  message?: string;
+}

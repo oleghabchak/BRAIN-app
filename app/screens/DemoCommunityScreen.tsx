@@ -18,8 +18,8 @@ export const DemoCommunityScreen: FC<DemoTabScreenProps<'DemoCommunity'>> = func
   const { themed } = useAppTheme();
   return (
     <Screen preset="scroll" contentContainerStyle={$styles.container} safeAreaEdges={['top']}>
-      <Text preset="heading" tx="demoCommunityScreen:title" style={themed($title)} />
-      <Text tx="demoCommunityScreen:tagLine" style={themed($tagline)} />
+      <Text preset="heading" tx="Learn Screen" style={themed($title)} />
+      {/* <Text tx="demoCommunityScreen:tagLine" style={themed($tagline)} />
 
       <Text preset="subheading" tx="demoCommunityScreen:joinUsOnSlackTitle" />
       <Text tx="demoCommunityScreen:joinUsOnSlack" style={themed($description)} />
@@ -90,7 +90,7 @@ export const DemoCommunityScreen: FC<DemoTabScreenProps<'DemoCommunity'>> = func
         leftIcon="clap"
         rightIcon={isRTL ? 'caretLeft' : 'caretRight'}
         onPress={() => openLinkInBrowser('https://infinite.red/contact')}
-      />
+      /> */}
     </Screen>
   );
 };

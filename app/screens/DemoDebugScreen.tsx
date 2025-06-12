@@ -62,12 +62,10 @@ export const DemoDebugScreen: FC<DemoTabScreenProps<'DemoDebug'>> = function Dem
 
   return (
     <Screen preset="scroll" safeAreaEdges={['top']} contentContainerStyle={[$styles.container, themed($container)]}>
-      <Text
-        style={themed($reportBugsLink)}
-        tx="demoDebugScreen:reportBugs"
-        onPress={() => openLinkInBrowser('https://github.com/infinitered/ignite/issues')}
-      />
-
+     
+            <Text preset="heading" tx="Account Screen" style={themed($title)} />
+      
+{/* 
       <Text style={themed($title)} preset="heading" tx="demoDebugScreen:title" />
       <Text preset="bold">Current system theme: {colorScheme}</Text>
       <Text preset="bold">Current app theme: {themeContext}</Text>
@@ -132,7 +130,7 @@ export const DemoDebugScreen: FC<DemoTabScreenProps<'DemoDebug'>> = function Dem
       </View>
       <View style={themed($buttonContainer)}>
         <Button style={themed($button)} tx="common:logOut" onPress={logout} />
-      </View>
+      </View> */}
     </Screen>
   );
 };

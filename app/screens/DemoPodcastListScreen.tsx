@@ -66,7 +66,9 @@ export const DemoPodcastListScreen: FC<DemoTabScreenProps<'DemoPodcastList'>> = 
 
     return (
       <Screen preset="fixed" safeAreaEdges={['top']} contentContainerStyle={$styles.flex1}>
-        <ListView<Episode>
+              <Text preset="heading" tx="Guide Screen" style={themed($title)} />
+        
+        {/* <ListView<Episode>
           contentContainerStyle={themed([$styles.container, $listContentContainer])}
           data={episodeStore.episodesForList.slice()}
           extraData={episodeStore.favorites.length + episodeStore.episodes.length}
@@ -117,7 +119,7 @@ export const DemoPodcastListScreen: FC<DemoTabScreenProps<'DemoPodcastList'>> = 
               onPressFavorite={() => episodeStore.toggleFavorite(item)}
             />
           )}
-        />
+        /> */}
       </Screen>
     );
   }
@@ -304,6 +306,9 @@ const $itemThumbnail: ThemedStyle<ImageStyle> = ({ spacing }) => ({
   alignSelf: 'flex-start',
 });
 
+const $title: ThemedStyle<TextStyle> = ({ spacing }) => ({
+  marginBottom: spacing.sm,
+});
 const $toggle: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   marginTop: spacing.md,
 });

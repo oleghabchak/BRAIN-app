@@ -24,7 +24,7 @@ import { UserRegistrationInfo } from "@/types/authContext";
 import { useAppTheme } from "@/utils/useAppTheme";
 import { useHeader } from "@/utils/useHeader";
 
-interface SignUpScreenProps extends AppStackScreenProps<"SignUp"> {}
+interface SignUpScreenProps extends AppStackScreenProps<"SignUp"> { }
 
 export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScreen(_props) {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
@@ -89,7 +89,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         </TouchableOpacity>
       ),
     },
-    [step]
+    [step],
   );
 
   const signUp = async () => {
@@ -98,10 +98,34 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       return;
     }
     setLoading(true);
-    const { name, email, password, c_password } = userRegistrationInfo;
-    const response = await onSignUp(name, email, password, c_password);
+    const { name, email, password, c_password, birth_date, gender } = userRegistrationInfo;
+
+    if (!birth_date) {
+      setRegisterError("Please select a valid birth date.");
+      setLoading(false);
+      return;
+    }
+    let finalBirthDate: Date;
+    if (birth_date instanceof Date) {
+      finalBirthDate = birth_date;
+    } else {
+      try {
+        finalBirthDate = new Date(birth_date);
+        if (isNaN(finalBirthDate.getTime())) {
+          setRegisterError("Invalid birth date selected.");
+          setLoading(false);
+          return;
+        }
+      } catch (e) {
+        setRegisterError("Error processing birth date.");
+        setLoading(false);
+        return;
+      }
+    }
+
+    const response = await onSignUp(name, email, password, c_password, finalBirthDate, gender);
     if (response.success) {
-      console.log(response.email_verification_token);
+      console.log(response.success);
       setUserRegistrationInfo({ ...userRegistrationInfo, step: step + 1 });
     } else {
       setRegisterError(response.message);
@@ -151,7 +175,10 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
             <DateChooser
               title="Date of Birth"
               value={userRegistrationInfo.birth_date}
-              onChange={(birth_date) => updateUserRegistrationInfo({ birth_date })}
+              onChange={(birth_date) => {
+                console.log("DateChooser onChange - received birth_date:", birth_date); 
+                updateUserRegistrationInfo({ birth_date });
+              }}
             />
             <CustomDropbar
               title="Your Gender"
@@ -261,6 +288,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
                 clickableText="Privacy Policy."
                 defaultTextStyles={{ color: colors.palette.neutral600, fontWeight: 400 }}
                 clickableTextStyles={{ fontWeight: 500 }}
+                onPressClickable={() => navigation.navigate("PolicyDetail", { policyType: "privacy" })}
               />
             </Checkbox>
             <Checkbox
@@ -276,6 +304,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
                 clickableText="Terms of Policy."
                 defaultTextStyles={{ color: colors.palette.neutral600, fontWeight: 400 }}
                 clickableTextStyles={{ fontWeight: 500 }}
+                onPressClickable={() => navigation.navigate("PolicyDetail", { policyType: "terms" })}
               />
             </Checkbox>
             <Checkbox
@@ -291,6 +320,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
                 clickableText="Cookie Policy."
                 defaultTextStyles={{ color: colors.palette.neutral600, fontWeight: 400 }}
                 clickableTextStyles={{ fontWeight: 500 }}
+                onPressClickable={() => navigation.navigate("PolicyDetail", { policyType: "cookie" })}
               />
             </Checkbox>
             {registerError && <Text style={{ fontSize: 12, color: colors.error }}>{registerError}</Text>}

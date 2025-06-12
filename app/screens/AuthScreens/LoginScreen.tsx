@@ -134,7 +134,10 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         >
           Switch to Sign up
         </Button>
-        <TouchableOpacity style={{ width: '100%', alignItems: 'center', marginTop: 20 }}>
+        <TouchableOpacity 
+          style={{ width: '100%', alignItems: 'center', marginTop: 20 }}
+          onPress={() => navigation.navigate('ForgotPassword')}
+        >
           <Text style={{ fontSize: 13, color: colors.palette.primary500, textDecorationLine: 'underline' }}>
             Forgot Password?
           </Text>
