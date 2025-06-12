@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authState, setAuthState] = useState<AuthState>({
     authenticated: null,
     token: null,
+    emailVerificationToken: undefined,
   });
 
   const [userRegistrationInfo, setUserRegistrationInfo] = useState({
@@ -45,78 +46,90 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const GENDER_MAPPING: { [key: string]: number } = {
-  "Female": 1,
-  "Male": 2,
-  "Prefer not to say": 3, 
-};
-const signUp = async (name: string, email: string, password: string, c_password: string, birth_date: Date, gender: string) => {
-  try {
-    if (!(birth_date instanceof Date)) {
-      console.error("birth_date is not a Date object:", birth_date);
-      return { success: false, message: 'Invalid birth date format.' };
-    }
-    const formattedBirthDate = birth_date.toISOString().split('T')[0];
-    console.log('Formatted Birth Date:', formattedBirthDate);
-
-    const genderId = GENDER_MAPPING[gender];
-
-    if (typeof genderId === 'undefined') {
-      console.error('Invalid gender string received:', gender);
-      return { success: false, message: 'Invalid gender selected.' };
-    }
-
-    const requestPayload = {
-      name,
-      email,
-      password,
-      c_password,
-      gender: genderId,
-      dob: formattedBirthDate,
-    };
-    console.log('Register Request Payload:', requestPayload);
-
-    const response = await api.post<RegisterResponse>('/register', requestPayload);
-    console.log('API Response for /register:', response);
-    if (response.success && response.data?.success) {
-      const user = response.data.success;
-
-      setAuthState({
-        ...authState,
-        token: user.token,
-      });
-
-      setToken(user.token);
-      await SecureStoreSave('token', user.token);
-      console.log('User registration successful:', user);
-      return { success: true, ...user, message: response.data.message, email_verification_token: response.data.email_verification_token };
-    } else {
-      return { success: false, message: response?.data?.message || 'Signup failed' };
-    }
-  } catch (error) {
-    console.error("Error during registration:", error);
-    return { success: false, message: 'Signup failed' };
-  }
-};
-
-  const verifyEmail = async (email: string, code: string) => {
-    if (!code) {
-      return { success: false, message: "Verification code can't be empty" };
-    }
+    "Female": 1,
+    "Male": 2,
+    "Prefer not to say": 3,
+  };
+  const signUp = async (name: string, email: string, password: string, c_password: string, birth_date: Date, gender: string) => {
     try {
-      const response = await api.post<RegisterResponse>('/verify-email', {
+      if (!(birth_date instanceof Date)) {
+        console.error("birth_date is not a Date object:", birth_date);
+        return { success: false, message: 'Invalid birth date format.' };
+      }
+      const formattedBirthDate = birth_date.toISOString().split('T')[0];
+      console.log('Formatted Birth Date:', formattedBirthDate);
+
+      const genderId = GENDER_MAPPING[gender];
+
+      if (typeof genderId === 'undefined') {
+        console.error('Invalid gender string received:', gender);
+        return { success: false, message: 'Invalid gender selected.' };
+      }
+
+      const requestPayload = {
+        name,
         email,
-        token: code,
-      });
-      if (response?.success) {
-        return { success: true, message: response.message ?? 'Email verified successfully!' };
+        password,
+        c_password,
+        gender: genderId,
+        dob: formattedBirthDate,
+      };
+      console.log('Register Request Payload:', requestPayload);
+
+      const response = await api.post<RegisterResponse>('/register', requestPayload);
+      console.log('API Response for /register:', response);
+      if (response.success && response.data?.success) {
+        const user = response.data.success;
+        const emailVerificationToken = response.data.email_verification_token;
+        setAuthState({
+          ...authState,
+          token: user.token,
+          emailVerificationToken: emailVerificationToken,
+        });
+
+        setToken(user.token);
+        await SecureStoreSave('token', user.token);
+        console.log('User registration successful:', user);
+        return { success: true, ...user, message: response.data.message, email_verification_token: response.data.email_verification_token };
       } else {
-        return { success: false, message: response?.message ?? 'Email verification failed' };
+        return { success: false, message: response?.data?.message || 'Signup failed' };
       }
     } catch (error) {
-      console.error(error);
-      return { success: false, message: 'Email verification failed' };
+      console.error("Error during registration:", error);
+      return { success: false, message: 'Signup failed' };
     }
   };
+
+
+const verifyEmail = async (email: string, otpCode: string) => {
+  if (!otpCode) {
+    return { success: false, message: "Verification code can't be empty" };
+  }
+
+  try {
+    console.log("Sending email verification request with payload:", {
+      email,
+      email_verification_code: Number(otpCode), 
+    });
+
+    const response = await api.post<RegisterResponse>('/verify-email', {
+      email,
+      email_verification_code: Number(otpCode),
+    });
+
+    console.log("Email verification API response:", response);
+
+    if (response?.success) {
+      setAuthState((prev) => ({ ...prev, emailVerificationToken: undefined }));
+      return { success: true, message: response.message ?? 'Email verified successfully!' };
+    } else {
+      return { success: false, message: response?.message ?? 'Email verification failed' };
+    }
+  } catch (error) {
+    console.error("Error during email verification:", error);
+    return { success: false, message: 'Email verification failed' };
+  }
+};
 
   const logIn = async (email: string, password: string) => {
     const message = validateEmail(email);

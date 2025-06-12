@@ -176,7 +176,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
               title="Date of Birth"
               value={userRegistrationInfo.birth_date}
               onChange={(birth_date) => {
-                console.log("DateChooser onChange - received birth_date:", birth_date); 
+                console.log("DateChooser onChange - received birth_date:", birth_date);
                 updateUserRegistrationInfo({ birth_date });
               }}
             />

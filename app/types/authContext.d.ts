@@ -3,6 +3,7 @@ import { ErrorResponse, LoginResponse, RegisterResponse } from './authResponse';
 export type AuthState = {
   authenticated: boolean | null;
   token: string | null;
+  emailVerificationToken?: string; 
 };
 
 export type UserRegistrationInfo = {
@@ -25,7 +26,7 @@ export interface AuthProps {
     birth_date: Date,
     gender: string
   ) => Promise<RegisterResponse | ErrorResponse>;
-  verifyEmail: (email: string, code: string) => Promise<RegisterResponse | ErrorResponse>;
+  verifyEmail: (email: string, code: string) => Promise<RegisterResponse | ErrorResponse>; 
   onLogIn: (email: string, password: string) => Promise<LoginResponse | ErrorResponse>;
   onLogOut: () => void;
   userRegistrationInfo: UserRegistrationInfo;
