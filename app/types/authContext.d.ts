@@ -1,7 +1,7 @@
 import { ErrorResponse, ForgotPasswordResponse, LoginResponse, RegisterResponse } from "./authResponse";
 
 export type AuthState = {
-  authenticated: boolean | null;
+  authenticated: boolean;
   token: string | null;
   emailVerificationToken?: string;
 };

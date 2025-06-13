@@ -55,12 +55,13 @@ export interface NavigationProps extends Partial<ComponentProps<typeof Navigatio
 export const AppNavigator = observer(function AppNavigator(props: NavigationProps) {
   const { themeScheme, navigationTheme, setThemeContextOverride, ThemeProvider } = useThemeProvider();
   const { authState } = useAuth();
+  console.log(authState.authenticated);
 
   return (
     <ThemeProvider value={{ themeScheme, setThemeContextOverride }}>
       <NavigationContainer ref={navigationRef} theme={navigationTheme} {...props}>
         {authState?.authenticated ? <AppStack /> : <AuthNavigator />}
- {/* <AppStack />  */}
+        {/* <AppStack />  */}
       </NavigationContainer>
     </ThemeProvider>
   );

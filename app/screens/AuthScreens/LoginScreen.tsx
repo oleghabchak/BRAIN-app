@@ -4,7 +4,7 @@ import EyeOpenIcon from "@assets/icons/auth/eye_open.svg";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { observer } from "mobx-react-lite";
 import { FC, useState } from "react";
-import { TouchableOpacity, ViewStyle } from "react-native";
+import { TextStyle, TouchableOpacity, ViewStyle } from "react-native";
 
 import { Button, Screen, Text, TextField } from "@/components";
 import BlurBackground from "@/components/BlurBackground";
