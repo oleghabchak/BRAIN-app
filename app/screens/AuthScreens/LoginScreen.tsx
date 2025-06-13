@@ -90,7 +90,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   };
 
   const getEyeIconColor = (props: { status?: string; editable?: boolean }) => {
-    if (props.status === 'error') return colors.error;
+    if (props.status === "error") return colors.error;
     if (!props.editable) return colors.palette.neutral400;
     return authPassword ? colors.palette.primary500 : colors.palette.neutral700;
   };
@@ -160,26 +160,18 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
         {error && <Text style={themed($errorMessage)}>{error}</Text>}
 
-        <Button
-          testID="login-button"
-          style={themed($tapButton)}
-          onPress={login}
-          disabled={!authEmail || !authPassword}
-        >
+        <Button testID="login-button" style={themed($tapButton)} onPress={login} disabled={!authEmail || !authPassword}>
           Log in
         </Button>
         <Button
           preset="outline"
-          testID="signup-button" 
+          testID="signup-button"
           style={themed($tapButton)}
           onPress={() => navigation.navigate("SignUp")}
         >
           Switch to Sign up
         </Button>
-        <TouchableOpacity
-          style={themed($forgotPasswordLinkContainer)}
-          onPress={() => navigation.navigate('ForgotPassword')}
-        >
+        <TouchableOpacity style={themed($forgotPasswordLinkContainer)} onPress={forgotPassword}>
           <Text style={themed($forgotPasswordLinkText)}>Forgot Password?</Text>
         </TouchableOpacity>
       </Screen>
@@ -206,18 +198,19 @@ const $tapButton: ThemedStyle<ViewStyle> = ({ spacing }) => ({
 });
 
 const $errorMessage: ThemedStyle<ViewStyle> = ({ spacing, colors }) => ({
-  marginBottom: spacing.xs, 
+  marginBottom: spacing.xs,
   color: colors.error,
-  fontSize: spacing.sm + 1, 
+  fontSize: spacing.sm + 1,
 });
 
 const $forgotPasswordLinkContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
-  width: '100%',
-  alignItems: 'center',
-  marginTop: spacing.xxl, 
+  width: "100%",
+  alignItems: "center",
+  marginTop: spacing.md,
 });
 
 const $forgotPasswordLinkText: ThemedStyle<TextStyle> = ({ colors, typography }) => ({
   color: colors.palette.primary500,
-  textDecorationLine: 'underline',
+  textDecorationLine: "underline",
+  fontSize: 14,
 });

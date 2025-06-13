@@ -1,7 +1,7 @@
 // src/navigation/AuthNavigator.tsx
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { PolicyType } from "@/types/policy";
 import * as Screens from "@/screens";
+import { PolicyType } from "@/constants/policyContent";
 
 export type AuthStackParamList = {
   Auth: undefined;

@@ -6,7 +6,7 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { observer } from "mobx-react-lite";
 import { FC, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, TextInput, TouchableOpacity, View, ViewStyle } from "react-native";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button, ListItem, ListView, Screen, Text, TextField } from "@/components";
 import BlurBackground from "@/components/BlurBackground";
 import CustomDropbar from "@/components/CustomDropbar";
@@ -23,8 +23,9 @@ import { type ThemedStyle } from "@/theme";
 import { UserRegistrationInfo } from "@/types/authContext";
 import { useAppTheme } from "@/utils/useAppTheme";
 import { useHeader } from "@/utils/useHeader";
+import { Gender, GENDER_OPTIONS } from "@/constants/gender";
 
-interface SignUpScreenProps extends AppStackScreenProps<"SignUp"> { }
+interface SignUpScreenProps extends AppStackScreenProps<"SignUp"> {}
 
 export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScreen(_props) {
   const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
@@ -38,7 +39,8 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
 
   const [isDisabled, setIsDisabled] = useState(true);
 
-  const { userRegistrationInfo, setUserRegistrationInfo, onSignUp, verifyEmail } = useAuth();
+  const { userRegistrationInfo, setUserRegistrationInfo, onSignUp, verifyEmail, sendVerifyEmailCode } = useAuth();
+  const [prevEmail, setPrevEmail] = useState("");
   const { step } = userRegistrationInfo;
 
   const [otpCode, setOtpCode] = useState(Array(6).fill(""));
@@ -51,6 +53,17 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
     themed,
     theme: { colors },
   } = useAppTheme();
+
+  useEffect(() => {
+    const getRegisterInfo = async () => {
+      const registerInfo = await AsyncStorage.getItem("registerInfo");
+      if (registerInfo) {
+        const parsedRegisterInfo = JSON.parse(registerInfo);
+        setUserRegistrationInfo({ ...parsedRegisterInfo, birth_date: new Date(parsedRegisterInfo.birth_date) });
+      }
+    };
+    getRegisterInfo();
+  }, []);
 
   useEffect(() => {
     getDisabledState();
@@ -68,6 +81,11 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
     }
   };
 
+  const handleNextStep = async (step: number) => {
+    updateUserRegistrationInfo({ step });
+    AsyncStorage.setItem("registerInfo", JSON.stringify({ ...userRegistrationInfo, step }));
+  };
+
   const updateUserRegistrationInfo = (data: Partial<UserRegistrationInfo>) => {
     setUserRegistrationInfo((prev) => ({ ...prev, ...data }));
   };
@@ -79,7 +97,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         <TouchableOpacity
           onPress={() => {
             if (step > 1) {
-              updateUserRegistrationInfo({ step: step - 1 });
+              handleNextStep(step - 1);
             } else {
               navigation.goBack();
             }
@@ -89,7 +107,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
         </TouchableOpacity>
       ),
     },
-    [step],
+    [step]
   );
 
   const signUp = async () => {
@@ -97,36 +115,17 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       setTermsError("You need to agree to all terms before register.");
       return;
     }
-    setLoading(true);
     const { name, email, password, c_password, birth_date, gender } = userRegistrationInfo;
-
-    if (!birth_date) {
-      setRegisterError("Please select a valid birth date.");
-      setLoading(false);
+    if (prevEmail == email) {
+      handleNextStep(step + 1);
       return;
     }
-    let finalBirthDate: Date;
-    if (birth_date instanceof Date) {
-      finalBirthDate = birth_date;
-    } else {
-      try {
-        finalBirthDate = new Date(birth_date);
-        if (isNaN(finalBirthDate.getTime())) {
-          setRegisterError("Invalid birth date selected.");
-          setLoading(false);
-          return;
-        }
-      } catch (e) {
-        setRegisterError("Error processing birth date.");
-        setLoading(false);
-        return;
-      }
-    }
+    setLoading(true);
 
-    const response = await onSignUp(name, email, password, c_password, finalBirthDate, gender);
+    const response = await onSignUp(name, email, password, c_password, birth_date, gender);
     if (response.success) {
-      //console.log(response.success);
-      setUserRegistrationInfo({ ...userRegistrationInfo, step: step + 1 });
+      handleNextStep(step + 1);
+      setPrevEmail(email);
     } else {
       setRegisterError(response.message);
     }
@@ -143,9 +142,10 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
       setEmailVerificationError(response.message);
       setModalOpen(false);
     } else {
-      setTimeout(() => {
+      setTimeout(async () => {
         navigation.navigate("Info");
         setModalOpen(false);
+        await AsyncStorage.removeItem("registerInfo");
       }, 2000);
     }
     setLoading(false);
@@ -182,7 +182,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
             <CustomDropbar
               title="Your Gender"
               placeholder="Please select a gender"
-              options={["Female", "Male", "Prefer not to say"]}
+              options={GENDER_OPTIONS}
               value={userRegistrationInfo.gender}
               onChange={(gender) => updateUserRegistrationInfo({ gender })}
             />
@@ -350,6 +350,9 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
               defaultText="Haven't received the verification code?"
               clickableText="Resend it."
               clickableTextStyles={{ textDecorationLine: "underline", fontWeight: 700 }}
+              onPressClickable={() => sendVerifyEmailCode(userRegistrationInfo.email)}
+              withCooldown={true}
+              cooldownText="Resend in "
             />
 
             <Text style={{ fontSize: 18, marginTop: 50 }}>Having trouble finding your 6-digit code?</Text>
@@ -373,7 +376,7 @@ export const SignUpScreen: FC<SignUpScreenProps> = observer(function SignUpScree
               return;
             }
             if (step < 3) {
-              setUserRegistrationInfo({ ...userRegistrationInfo, step: step + 1 });
+              handleNextStep(step + 1);
             } else {
               onVerifyEmail();
             }

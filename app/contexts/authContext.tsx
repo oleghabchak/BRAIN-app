@@ -5,15 +5,15 @@ import { clearToken, setToken } from "@/services/api/client";
 import { AuthProps, AuthState } from "@/types/authContext";
 import {
   ApiResponse,
-  AuthSuccessData,
-  ForgotPasswordResponse,
+  SuccessData,
   LoginResponse,
   RegisterResponse,
   ResetPasswordResponse,
-  VerifyOtpResponse,
+  VerifyEmailResponse,
+  SendVerifyEmailCodeResponse,
 } from "@/types/authResponse";
 
-import { GENDER_MAPPING } from "@/constants/auth";
+import { Gender, GENDER_MAPPING } from "@/constants/gender";
 
 const AuthContext = createContext<AuthProps>({});
 
@@ -25,7 +25,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authState, setAuthState] = useState<AuthState>({
     authenticated: false,
     token: null,
-    emailVerificationToken: undefined,
   });
 
   const [userRegistrationInfo, setUserRegistrationInfo] = useState({
@@ -40,14 +39,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const initializeAuth = async () => {
-      const token = await SecureStoreGet("token");
+      const authInfo = await SecureStoreGet("authInfo");
+      const parsedAuthInfo = JSON.parse(authInfo ?? "");
 
-      if (token) {
+      if (parsedAuthInfo) {
+        const { token, authenticated } = parsedAuthInfo;
         setToken(token);
 
         setAuthState({
           token,
-          authenticated: true,
+          authenticated,
         });
       }
     };
@@ -61,8 +62,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     password: string,
     c_password: string,
     birth_date: Date,
-    gender: string
-  ): Promise<ApiResponse<AuthSuccessData>> => {
+    gender: Gender
+  ): Promise<ApiResponse<SuccessData>> => {
     try {
       if (!(birth_date instanceof Date)) {
         console.error("birth_date is not a Date object:", birth_date);
@@ -70,44 +71,35 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
       const formattedBirthDate = birth_date.toISOString().split("T")[0];
 
-      const genderId = GENDER_MAPPING[gender];
-
-      if (typeof genderId === "undefined") {
-        console.error("Invalid gender string received:", gender);
-        return { success: false, message: "Invalid gender selected." };
-      }
-
       const requestPayload = {
         name,
         email,
         password,
         c_password,
-        gender: genderId,
+        gender: GENDER_MAPPING[gender],
         dob: formattedBirthDate,
       };
 
       const response = await api.post<RegisterResponse>("/register", requestPayload);
 
+      console.log(response.data?.email_verification_code);
+
       if (response.success && response.data?.success?.token) {
-        // response.data.success is now AuthSuccessData
         const user = response.data.success;
-        const emailVerificationToken = response.data.email_verification_token;
 
         setAuthState({
           ...authState,
           token: user.token,
-          emailVerificationToken: emailVerificationToken,
         });
-
         setToken(user.token);
-        await SecureStoreSave("token", user.token);
 
-        // Return the consistent ApiResponse structure
+        const authInfo = { token: user.token, authenticated: false };
+        await SecureStoreSave("authInfo", JSON.stringify(authInfo));
+
         return {
           success: true,
           message: response.data.message || "Registration successful!",
           data: user,
-          email_verification_token: emailVerificationToken,
         };
       } else {
         return { success: false, message: response.data?.message || "Signup failed" };
@@ -124,13 +116,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     try {
-      const response = await api.post<VerifyOtpResponse>("/verify-email", {
+      const response = await api.post<VerifyEmailResponse>("/verify-email", {
         email,
         email_verification_code: Number(otpCode),
       });
 
       if (response.success) {
         setAuthState((prev) => ({ ...prev, emailVerificationToken: undefined }));
+        const authInfo = { token: authState.token, authenticated: true };
+        await SecureStoreSave("authInfo", JSON.stringify(authInfo));
+
         return { success: true, message: response.message ?? "Email verified successfully!" };
       } else {
         return { success: false, message: response.message ?? "Email verification failed" };
@@ -141,7 +136,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const logIn = async (email: string, password: string): Promise<ApiResponse<AuthSuccessData>> => {
+  const logIn = async (email: string, password: string): Promise<ApiResponse<SuccessData>> => {
     const message = validateEmail(email);
     if (message) {
       return { success: false, message };
@@ -153,7 +148,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       if (response.success && response.data?.data?.token) {
-        // Access nested data.data as per your previous LoginResponse
         const user = response.data.data;
 
         setAuthState({
@@ -162,7 +156,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         });
 
         setToken(user.token);
-        await SecureStoreSave("token", user.token);
+        const authInfo = { token: user.token, authenticated: true };
+        await SecureStoreSave("authInfo", JSON.stringify(authInfo));
 
         return { success: true, message: response.data.message, data: user };
       } else {
@@ -182,7 +177,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logOut = async () => {
-    await SecureStoreDelete("token");
+    await SecureStoreDelete("authInfo");
     clearToken();
 
     setAuthState({
@@ -191,38 +186,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const forgotPassword = async (email: string): Promise<ApiResponse<undefined>> => {
+  const resetPassword = async (
+    email: string,
+    password: string,
+    password_confirmation: string,
+    password_reset_code: string
+  ): Promise<ApiResponse<ResetPasswordResponse>> => {
     try {
-      const response = await api.post<ForgotPasswordResponse>("/forgot-password", { email });
-      if (response.success) {
-        return { success: true, message: response.message || "Password reset code sent!" };
-      } else {
-        return { success: false, message: response.message || "Failed to send password reset code." };
-      }
-    } catch (error) {
-      console.error("Forgot password error:", error);
-      return { success: false, message: "Failed to send password reset code." };
-    }
-  };
-
-  const verifyForgotPasswordOtp = async (email: string, otp: string): Promise<ApiResponse<undefined>> => {
-    try {
-      const response = await api.post<VerifyOtpResponse>("/verify-email", { email, otp });
-      if (response.success) {
-        return { success: true, message: response.message || "OTP verified successfully!" };
-      } else {
-        return { success: false, message: response.message || "Invalid or expired OTP." };
-      }
-    } catch (error) {
-      console.error("Verify forgot password OTP error:", error);
-      return { success: false, message: "Invalid or expired OTP." };
-    }
-  };
-
-  const resetPassword = async (email: string, otp: string, password: string): Promise<ApiResponse<undefined>> => {
-    try {
-      const response = await api.post<ResetPasswordResponse>("/reset-password", { email, otp, password });
-      if (response.success) {
+      const response = await api.post<ResetPasswordResponse>("/reset-password", {
+        email,
+        password,
+        password_confirmation,
+        password_reset_code,
+      });
+      if (response.success && response.data?.token) {
+        const authInfo = { token: response.data.token, authenticated: true };
+        await SecureStoreSave("authInfo", JSON.stringify(authInfo));
+        setToken(response.data?.token);
         return { success: true, message: response.message || "Password reset successfully!" };
       } else {
         return { success: false, message: response.message || "Failed to reset password." };
@@ -233,14 +213,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const sendVerifyEmailCode = async (email: string): Promise<ApiResponse<SendVerifyEmailCodeResponse>> => {
+    try {
+      const response = await api.post<ResetPasswordResponse>("/send-verify-email", {
+        email,
+      });
+      if (response.success && response.data?.token) {
+        return { success: true, message: response.message || "Verification code sent successfully!" };
+      } else {
+        return { success: false, message: response.message || "Failed to send verification code." };
+      }
+    } catch (error) {
+      console.error("Send verify email code error:", error);
+      return { success: false, message: "Failed to send verification code." };
+    }
+  };
+
   const value = {
     onSignUp: signUp,
     onLogIn: logIn,
     onLogOut: logOut,
     verifyEmail,
-    forgotPassword,
-    verifyForgotPasswordOtp,
     resetPassword,
+    sendVerifyEmailCode,
     authState,
     setAuthState,
     userRegistrationInfo,

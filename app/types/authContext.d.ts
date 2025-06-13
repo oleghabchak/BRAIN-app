@@ -1,4 +1,5 @@
-import { ErrorResponse, ForgotPasswordResponse, LoginResponse, RegisterResponse } from "./authResponse";
+import { Gender } from "@/constants/gender";
+import { ErrorResponse, ForgotPasswordResponse, LoginResponse, RegisterResponse, ResetPasswordResponse } from "./authResponse";
 
 export type AuthState = {
   authenticated: boolean;
@@ -9,7 +10,7 @@ export type AuthState = {
 export type UserRegistrationInfo = {
   name: string;
   birth_date: Date;
-  gender: string | number;
+  gender: Gender;
   email: string;
   password: string;
   c_password: string;
@@ -24,7 +25,7 @@ export interface AuthProps {
     password: string,
     c_password: string,
     birth_date: Date,
-    gender: string
+    gender: Gender
   ) => Promise<RegisterResponse | ErrorResponse>;
   verifyEmail: (email: string, code: string) => Promise<RegisterResponse | ErrorResponse>;
   resetPassword: (
@@ -33,6 +34,7 @@ export interface AuthProps {
     password_confirmation: string,
     password_reset_code: string
   ) => Promise<ForgotPasswordResponse | ErrorResponse>;
+  sendVerifyEmailCode: (email: string) => Promise<ResetPasswordResponse | ErrorResponse>
   onLogIn: (email: string, password: string) => Promise<LoginResponse | ErrorResponse>;
   onLogOut: () => void;
   userRegistrationInfo: UserRegistrationInfo;

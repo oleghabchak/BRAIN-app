@@ -34,6 +34,8 @@ export const ForgotPassword: FC<ForgotPasswordProps> = () => {
     authenticationStore: { authEmail },
   } = useStores();
 
+  const { sendVerifyEmailCode } = useAuth();
+
   const [otpCode, setOtpCode] = useState(Array(6).fill(""));
   const [emailVerificationError, setEmailVerificationError] = useState("");
 
@@ -102,6 +104,9 @@ export const ForgotPassword: FC<ForgotPasswordProps> = () => {
             defaultText="Haven't received the verification code?"
             clickableText="Resend it."
             clickableTextStyles={{ textDecorationLine: "underline", fontWeight: 700 }}
+            onPressClickable={() => sendVerifyEmailCode(authEmail)}
+            withCooldown={true}
+            cooldownText="Resend in "
           />
 
           <View style={{ marginTop: 40 }}>
