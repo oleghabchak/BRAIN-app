@@ -1,0 +1,6 @@
+export enum ForgotPasswordStep {
+  EMAIL_ENTRY = 1,
+  OTP_VERIFICATION = 2,
+  NEW_PASSWORD_SET = 3,
+  PASSWORD_RESET_SUCCESS = 4,
+}

@@ -206,41 +206,6 @@ export const DemoShowroomScreen: FC<DemoTabScreenProps<'DemoShowroom'>> = functi
         {...(isAndroid ? { KeyboardAvoidingViewProps: { behavior: undefined } } : {})}
       >
          <Text preset="heading" tx="Home" style={themed($title)} />
-   
-        {/* <SectionListWithKeyboardAwareScrollView
-          ref={listRef}
-          contentContainerStyle={themed($sectionListContentContainer)}
-          stickySectionHeadersEnabled={false}
-          sections={Object.values(Demos).map((d) => ({
-            name: d.name,
-            description: d.description,
-            data: [d.data({ theme, themed })],
-          }))}
-          renderItem={({ item, index: sectionIndex }) => (
-            <View>
-              {item.map((demo: ReactElement, demoIndex: number) => (
-                <View key={`${sectionIndex}-${demoIndex}`}>{demo}</View>
-              ))}
-            </View>
-          )}
-          renderSectionFooter={() => <View style={themed($demoUseCasesSpacer)} />}
-          ListHeaderComponent={
-            <View style={themed($heading)}>
-              <Text preset="heading" tx="demoShowroomScreen:jumpStart" />
-            </View>
-          }
-          onScrollToIndexFailed={scrollToIndexFailed}
-          renderSectionHeader={({ section }) => {
-            return (
-              <View>
-                <Text preset="heading" style={themed($demoItemName)}>
-                  {section.name}
-                </Text>
-                <Text style={themed($demoItemDescription)}>{translate(section.description)}</Text>
-              </View>
-            );
-          }}
-        /> */}
       </Screen>
     </Drawer>
   );
