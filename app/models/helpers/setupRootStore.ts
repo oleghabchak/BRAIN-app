@@ -28,20 +28,16 @@ export async function setupRootStore(rootStore: RootStore) {
   let restoredState: RootStoreSnapshot | undefined | null;
 
   try {
-    // load the last known state from AsyncStorage
     restoredState = ((await storage.load(ROOT_STATE_STORAGE_KEY)) ?? {}) as RootStoreSnapshot;
     applySnapshot(rootStore, restoredState);
   } catch (e) {
-    // if there's any problems loading, then inform the dev what happened
     if (__DEV__) {
       if (e instanceof Error) console.error(e.message);
     }
   }
 
-  // stop tracking state changes if we've already setup
   if (_disposer) _disposer();
 
-  // track changes & save to AsyncStorage
   _disposer = onSnapshot(rootStore, (snapshot) => storage.save(ROOT_STATE_STORAGE_KEY, snapshot));
 
   const unsubscribe = () => {

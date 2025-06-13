@@ -202,45 +202,10 @@ export const DemoShowroomScreen: FC<DemoTabScreenProps<'DemoShowroom'>> = functi
       <Screen
         preset="fixed"
         safeAreaEdges={['top']}
-        contentContainerStyle={$styles.flex1}
+        contentContainerStyle={$styles.container}
         {...(isAndroid ? { KeyboardAvoidingViewProps: { behavior: undefined } } : {})}
       >
-        <DrawerIconButton onPress={toggleDrawer} />
-
-        <SectionListWithKeyboardAwareScrollView
-          ref={listRef}
-          contentContainerStyle={themed($sectionListContentContainer)}
-          stickySectionHeadersEnabled={false}
-          sections={Object.values(Demos).map((d) => ({
-            name: d.name,
-            description: d.description,
-            data: [d.data({ theme, themed })],
-          }))}
-          renderItem={({ item, index: sectionIndex }) => (
-            <View>
-              {item.map((demo: ReactElement, demoIndex: number) => (
-                <View key={`${sectionIndex}-${demoIndex}`}>{demo}</View>
-              ))}
-            </View>
-          )}
-          renderSectionFooter={() => <View style={themed($demoUseCasesSpacer)} />}
-          ListHeaderComponent={
-            <View style={themed($heading)}>
-              <Text preset="heading" tx="demoShowroomScreen:jumpStart" />
-            </View>
-          }
-          onScrollToIndexFailed={scrollToIndexFailed}
-          renderSectionHeader={({ section }) => {
-            return (
-              <View>
-                <Text preset="heading" style={themed($demoItemName)}>
-                  {section.name}
-                </Text>
-                <Text style={themed($demoItemDescription)}>{translate(section.description)}</Text>
-              </View>
-            );
-          }}
-        />
+         <Text preset="heading" tx="Home" style={themed($title)} />
       </Screen>
     </Drawer>
   );
@@ -249,6 +214,10 @@ export const DemoShowroomScreen: FC<DemoTabScreenProps<'DemoShowroom'>> = functi
 const $drawer: ThemedStyle<ViewStyle> = ({ colors }) => ({
   backgroundColor: colors.background,
   flex: 1,
+});
+
+const $title: ThemedStyle<TextStyle> = ({ spacing }) => ({
+  marginBottom: spacing.sm,
 });
 
 const $listContentContainer: ThemedStyle<ContentStyle> = ({ spacing }) => ({
@@ -282,7 +251,7 @@ const $menuContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
 
 const $demoItemName: ThemedStyle<TextStyle> = ({ spacing }) => ({
   fontSize: 24,
-  marginBottom: spacing.md,
+  marginBottom: spacing.lg,
 });
 
 const $demoItemDescription: ThemedStyle<TextStyle> = ({ spacing }) => ({

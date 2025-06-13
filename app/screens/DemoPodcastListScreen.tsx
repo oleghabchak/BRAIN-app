@@ -66,58 +66,7 @@ export const DemoPodcastListScreen: FC<DemoTabScreenProps<'DemoPodcastList'>> = 
 
     return (
       <Screen preset="fixed" safeAreaEdges={['top']} contentContainerStyle={$styles.flex1}>
-        <ListView<Episode>
-          contentContainerStyle={themed([$styles.container, $listContentContainer])}
-          data={episodeStore.episodesForList.slice()}
-          extraData={episodeStore.favorites.length + episodeStore.episodes.length}
-          refreshing={refreshing}
-          estimatedItemSize={177}
-          onRefresh={manualRefresh}
-          ListEmptyComponent={
-            isLoading ? (
-              <ActivityIndicator />
-            ) : (
-              <EmptyState
-                preset="generic"
-                style={themed($emptyState)}
-                headingTx={
-                  episodeStore.favoritesOnly ? 'demoPodcastListScreen:noFavoritesEmptyState.heading' : undefined
-                }
-                contentTx={
-                  episodeStore.favoritesOnly ? 'demoPodcastListScreen:noFavoritesEmptyState.content' : undefined
-                }
-                button={episodeStore.favoritesOnly ? '' : undefined}
-                buttonOnPress={manualRefresh}
-                imageStyle={$emptyStateImage}
-                ImageProps={{ resizeMode: 'contain' }}
-              />
-            )
-          }
-          ListHeaderComponent={
-            <View style={themed($heading)}>
-              <Text preset="heading" tx="demoPodcastListScreen:title" />
-              {(episodeStore.favoritesOnly || episodeStore.episodesForList.length > 0) && (
-                <View style={themed($toggle)}>
-                  <Switch
-                    value={episodeStore.favoritesOnly}
-                    onValueChange={() => episodeStore.setProp('favoritesOnly', !episodeStore.favoritesOnly)}
-                    labelTx="demoPodcastListScreen:onlyFavorites"
-                    labelPosition="left"
-                    labelStyle={$labelStyle}
-                    accessibilityLabel={translate('demoPodcastListScreen:accessibility.switch')}
-                  />
-                </View>
-              )}
-            </View>
-          }
-          renderItem={({ item }) => (
-            <EpisodeCard
-              episode={item}
-              isFavorite={episodeStore.hasFavorite(item)}
-              onPressFavorite={() => episodeStore.toggleFavorite(item)}
-            />
-          )}
-        />
+              <Text preset="heading" tx="Guide Screen" style={themed($title)} />
       </Screen>
     );
   }
@@ -304,6 +253,9 @@ const $itemThumbnail: ThemedStyle<ImageStyle> = ({ spacing }) => ({
   alignSelf: 'flex-start',
 });
 
+const $title: ThemedStyle<TextStyle> = ({ spacing }) => ({
+  marginBottom: spacing.sm,
+});
 const $toggle: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   marginTop: spacing.md,
 });

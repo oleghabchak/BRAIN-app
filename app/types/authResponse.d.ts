@@ -3,6 +3,17 @@ export interface SuccessData {
   name: string;
 }
 
+export interface AuthSuccessData {
+  token: string;
+  name: string;
+}
+
+export interface ApiResponse<T = undefined> {
+  success: boolean;
+  message: string;
+  data?: T;
+  email_verification_token?: string;
+}
 export interface RegisterResponse {
   success: SuccessData;
   message: string;
@@ -18,4 +29,25 @@ export interface LoginResponse {
 export interface ErrorResponse {
   success: boolean;
   message: string;
+}
+export interface AuthResponse {
+  success: boolean;
+  data?: SuccessData;
+  message?: string;
+  email_verification_token?: string;
+} 
+
+export interface ForgotPasswordResponse {
+  success: boolean;
+  message?: string;
+}
+
+export interface VerifyOtpResponse {
+  success: boolean;
+  message?: string;
+}
+
+export interface ResetPasswordResponse {
+  success: boolean;
+  message?: string;
 }
