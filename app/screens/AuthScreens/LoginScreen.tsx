@@ -77,7 +77,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       });
 
       if (response && response.success) {
-        navigation.navigate("ForgotPassword", { code: response.data.password_reset_code });
+        navigation.navigate("ForgotPassword");
+        console.log(response.data?.password_reset_code);
       } else {
         setNoEmailForgotPassword(response.data.message);
       }

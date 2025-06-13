@@ -7,7 +7,7 @@ import { $screenContentContainer } from "./LoginScreen";
 import { useAppTheme } from "@/utils/useAppTheme";
 import { useHeader } from "@/utils/useHeader";
 import LeftArrowIcon from "@assets/icons/arrow-left.svg";
-import { useNavigation, NavigationProp, useRoute } from "@react-navigation/native";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
 import OTPCode from "@/components/OTPCode";
 import TextWithLink from "@/components/TextWithLink";
 import type { ThemedStyle } from "@/theme";
@@ -33,12 +33,6 @@ export const ForgotPassword: FC<ForgotPasswordProps> = () => {
   const {
     authenticationStore: { authEmail },
   } = useStores();
-
-  const route = useRoute();
-
-  const { code } = route.params as { code: string };
-
-  console.log(code);
 
   const [otpCode, setOtpCode] = useState(Array(6).fill(""));
   const [emailVerificationError, setEmailVerificationError] = useState("");
