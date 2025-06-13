@@ -39,7 +39,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
   const {
     themed,
-    theme: { colors },
+    theme: { colors, spacing, typography },
   } = useAppTheme();
 
   useHeader(
@@ -89,8 +89,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     }
   };
 
-  const getEyeIconColor = (props: any) => {
-    if (props.status === "error") return colors.error;
+  const getEyeIconColor = (props: { status?: string; editable?: boolean }) => {
+    if (props.status === 'error') return colors.error;
     if (!props.editable) return colors.palette.neutral400;
     return authPassword ? colors.palette.primary500 : colors.palette.neutral700;
   };
@@ -158,23 +158,29 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
           onChange={() => error && setError("")}
         />
 
-        {error && <Text style={{ marginBottom: 5, color: colors.error }}>{error}</Text>}
+        {error && <Text style={themed($errorMessage)}>{error}</Text>}
 
-        <Button testID="login-button" style={themed($tapButton)} onPress={login} disabled={!authEmail || !authPassword}>
+        <Button
+          testID="login-button"
+          style={themed($tapButton)}
+          onPress={login}
+          disabled={!authEmail || !authPassword}
+        >
           Log in
         </Button>
         <Button
           preset="outline"
-          testID="login-button"
+          testID="signup-button" 
           style={themed($tapButton)}
           onPress={() => navigation.navigate("SignUp")}
         >
           Switch to Sign up
         </Button>
-        <TouchableOpacity style={{ width: "100%", alignItems: "center", marginTop: 20 }} onPress={forgotPassword}>
-          <Text style={{ fontSize: 13, color: colors.palette.primary500, textDecorationLine: "underline" }}>
-            Forgot Password?
-          </Text>
+        <TouchableOpacity
+          style={themed($forgotPasswordLinkContainer)}
+          onPress={() => navigation.navigate('ForgotPassword')}
+        >
+          <Text style={themed($forgotPasswordLinkText)}>Forgot Password?</Text>
         </TouchableOpacity>
       </Screen>
       {loading && (
@@ -197,4 +203,21 @@ const $textField: ThemedStyle<ViewStyle> = ({ spacing }) => ({
 
 const $tapButton: ThemedStyle<ViewStyle> = ({ spacing }) => ({
   marginTop: spacing.xs,
+});
+
+const $errorMessage: ThemedStyle<ViewStyle> = ({ spacing, colors }) => ({
+  marginBottom: spacing.xs, 
+  color: colors.error,
+  fontSize: spacing.sm + 1, 
+});
+
+const $forgotPasswordLinkContainer: ThemedStyle<ViewStyle> = ({ spacing }) => ({
+  width: '100%',
+  alignItems: 'center',
+  marginTop: spacing.xxl, 
+});
+
+const $forgotPasswordLinkText: ThemedStyle<TextStyle> = ({ colors, typography }) => ({
+  color: colors.palette.primary500,
+  textDecorationLine: 'underline',
 });

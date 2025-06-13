@@ -2,6 +2,10 @@ import { BottomTabScreenProps, createBottomTabNavigator } from '@react-navigatio
 import { CompositeScreenProps } from '@react-navigation/native';
 import { TextStyle, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import  HomeIcon  from '../../assets/icons/home.svg';
+import  LearnIcon  from '../../assets/icons/learn.svg';
+import  GuideIcon  from '../../assets/icons/play.svg';
+import  AccountIcon  from '../../assets/icons/user.svg';
 
 import { Icon } from '@/components';
 import { translate } from '@/i18n';
@@ -61,20 +65,21 @@ export function DemoNavigator() {
         name="DemoShowroom"
         component={DemoShowroomScreen}
         options={{
-          tabBarLabel: translate('demoNavigator:componentsTab'),
+          tabBarLabel: "Home",
           tabBarIcon: ({ focused }) => (
-            <Icon icon="components" color={focused ? colors.tint : colors.tintInactive} size={30} />
+            <HomeIcon color={focused ? colors.tint : colors.tintInactive} width={24} height={24} />
           ),
         }}
+
       />
 
       <Tab.Screen
         name="DemoCommunity"
         component={DemoCommunityScreen}
         options={{
-          tabBarLabel: translate('demoNavigator:communityTab'),
+          tabBarLabel: "Learn",
           tabBarIcon: ({ focused }) => (
-            <Icon icon="community" color={focused ? colors.tint : colors.tintInactive} size={30} />
+            <LearnIcon color={focused ? colors.tint : colors.tintInactive} width={24} height={24} />
           ),
         }}
       />
@@ -84,9 +89,9 @@ export function DemoNavigator() {
         component={DemoPodcastListScreen}
         options={{
           tabBarAccessibilityLabel: translate('demoNavigator:podcastListTab'),
-          tabBarLabel: translate('demoNavigator:podcastListTab'),
+          tabBarLabel: "Guide",
           tabBarIcon: ({ focused }) => (
-            <Icon icon="podcast" color={focused ? colors.tint : colors.tintInactive} size={30} />
+            <GuideIcon color={focused ? colors.tint : colors.tintInactive} width={24} height={24} />
           ),
         }}
       />
@@ -95,9 +100,9 @@ export function DemoNavigator() {
         name="DemoDebug"
         component={DemoDebugScreen}
         options={{
-          tabBarLabel: translate('demoNavigator:debugTab'),
+          tabBarLabel: "Account",
           tabBarIcon: ({ focused }) => (
-            <Icon icon="debug" color={focused ? colors.tint : colors.tintInactive} size={30} />
+            <AccountIcon color={focused ? colors.tint : colors.tintInactive} width={24} height={24} />
           ),
         }}
       />

@@ -6,7 +6,7 @@ let token: string | null = null;
 
 export const createAxiosClient = () => {
   const client = axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: 'https://www.brainsugar.co/api',
     timeout: 15000,
   });
 

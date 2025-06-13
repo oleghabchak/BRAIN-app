@@ -8,6 +8,7 @@ interface TextWithLinkProps {
   style?: StyleProp<ViewStyle>;
   defaultTextStyles?: StyleProp<TextStyle>;
   clickableTextStyles?: StyleProp<TextStyle>;
+  onPressClickable?: () => void;
 }
 
 export default function TextWithLink({
@@ -16,6 +17,7 @@ export default function TextWithLink({
   style,
   defaultTextStyles,
   clickableTextStyles,
+  onPressClickable, 
 }: TextWithLinkProps) {
   const {
     theme: { colors },
@@ -23,7 +25,7 @@ export default function TextWithLink({
   return (
     <View style={[{ flexDirection: 'row', alignItems: 'center', gap: 5, justifyContent: 'center' }, style]}>
       <Text style={[{ fontSize: 14, textAlign: 'center' }, defaultTextStyles]}>{defaultText}</Text>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={onPressClickable}>
         <Text style={[{ color: colors.palette.primary500, fontSize: 14 }, clickableTextStyles]}>{clickableText}</Text>
       </TouchableOpacity>
     </View>
