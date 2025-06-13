@@ -19,3 +19,15 @@ export interface ErrorResponse {
   success: boolean;
   message: string;
 }
+
+export interface ResetPasswordResponse {
+  success: boolean;
+  message: string;
+  token: string;
+}
+
+export interface ForgotPasswordResponse {
+  success: boolean;
+  message: string;
+  password_reset_code: string;
+}

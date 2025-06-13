@@ -1,9 +1,9 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from "react";
 
-import { api, SecureStoreDelete, SecureStoreGet, SecureStoreSave } from '@/services';
-import { clearToken, setToken } from '@/services/api/client';
-import { AuthProps, AuthState } from '@/types/authContext';
-import { LoginResponse, RegisterResponse } from '@/types/authResponse';
+import { api, SecureStoreDelete, SecureStoreGet, SecureStoreSave } from "@/services";
+import { clearToken, setToken } from "@/services/api/client";
+import { AuthProps, AuthState } from "@/types/authContext";
+import { ResetPasswordResponse, LoginResponse, RegisterResponse } from "@/types/authResponse";
 
 const AuthContext = createContext<AuthProps>({});
 
@@ -18,18 +18,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   const [userRegistrationInfo, setUserRegistrationInfo] = useState({
-    name: '',
+    name: "",
     birth_date: new Date(),
-    gender: '',
-    email: '',
-    password: '',
-    c_password: '',
+    gender: "",
+    email: "",
+    password: "",
+    c_password: "",
     step: 1,
   });
 
   useEffect(() => {
     const initializeAuth = async () => {
-      const token = await SecureStoreGet('token');
+      const token = await SecureStoreGet("token");
 
       if (token) {
         setToken(token);
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signUp = async (name: string, email: string, password: string, c_password: string) => {
     try {
-      const response = await api.post<RegisterResponse>('/register', {
+      const response = await api.post<RegisterResponse>("/register", {
         name,
         email,
         password,
@@ -62,15 +62,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         });
 
         setToken(user.success.token);
-        await SecureStoreSave('token', user.success.token);
+        await SecureStoreSave("token", user.success.token);
 
         return user;
       } else {
-        return { success: false, message: 'Signup failed' };
+        return { success: false, message: "Signup failed" };
       }
     } catch (error) {
       console.error(error);
-      return { success: false, message: 'Signup failed' };
+      return { success: false, message: "Signup failed" };
     }
   };
 
@@ -79,19 +79,47 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       return { success: false, message: "Verification code can't be empty" };
     }
     try {
-      const response = await api.post<RegisterResponse>('/verify-email', {
+      const response = await api.post<RegisterResponse>("/verify-email", {
         email,
         token: code,
       });
       if (response && response.success) {
         return response.data;
       } else {
-        if (response.message !== '[object Object]') return { success: false, message: response?.message };
-        return { success: false, message: 'Email verification failed' };
+        if (response.message !== "[object Object]") return { success: false, message: response?.message };
+        return { success: false, message: "Email verification failed" };
       }
     } catch (error) {
       console.error(error);
-      return { success: false, message: 'Email verification failed' };
+      return { success: false, message: "Email verification failed" };
+    }
+  };
+
+  const resetPassword = async (
+    email: string,
+    password: string,
+    password_confirmation: string,
+    password_reset_code: string
+  ) => {
+    if (!password || !password_confirmation || !password_reset_code) {
+      return { success: false, message: "Please fill out all fields" };
+    }
+    try {
+      const response = await api.post<ResetPasswordResponse>("/reset-password", {
+        email,
+        password,
+        password_confirmation,
+        password_reset_code,
+      });
+      if (response && response.success) {
+        return response.data;
+      } else {
+        if (response.message !== "[object Object]") return { success: false, message: response?.message };
+        return { success: false, message: "Password reset failed" };
+      }
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: "Password reset failed" };
     }
   };
 
@@ -101,7 +129,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       return { success: false, message };
     }
     try {
-      const response = await api.post<LoginResponse>('/login', {
+      const response = await api.post<LoginResponse>("/login", {
         email,
         password,
       });
@@ -115,27 +143,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         });
 
         setToken(user.token);
-        await SecureStoreSave('token', user.token);
+        await SecureStoreSave("token", user.token);
 
         return { success: true, ...user, message: response.data.message };
       } else {
-        return { success: false, message: 'Email or password is not correct' };
+        return { success: false, message: "Email or password is not correct" };
       }
     } catch (error) {
       console.error(error);
-      return { success: false, message: 'Something goes wrong' };
+      return { success: false, message: "Something goes wrong" };
     }
   };
 
   const validateEmail = (authEmail: string) => {
     if (authEmail.length === 0) return "Email can't be blank";
-    if (authEmail.length < 6) return 'Email must be at least 6 characters';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(authEmail)) return 'Email must be a valid email address (ex. john@mail.com)';
-    return '';
+    if (authEmail.length < 6) return "Email must be at least 6 characters";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(authEmail)) return "Email must be a valid email address (ex. john@mail.com)";
+    return "";
   };
 
   const logOut = async () => {
-    await SecureStoreDelete('token');
+    await SecureStoreDelete("token");
     clearToken();
 
     setAuthState({
@@ -149,6 +177,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     onLogIn: logIn,
     onLogOut: logOut,
     verifyEmail,
+    resetPassword,
     authState,
     setAuthState,
     userRegistrationInfo,

@@ -248,8 +248,9 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
   );
 });
 
-const $labelStyle: ThemedStyle<TextStyle> = ({ spacing }) => ({
+const $labelStyle: ThemedStyle<TextStyle> = ({ spacing, typography }) => ({
   marginBottom: spacing.xs,
+  fontFamily: typography.primary.normal,
 });
 
 export const $inputWrapperStyle: ThemedStyle<ViewStyle> = ({ colors }) => ({

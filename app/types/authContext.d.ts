@@ -1,4 +1,4 @@
-import { ErrorResponse, LoginResponse, RegisterResponse } from './authResponse';
+import { ErrorResponse, ForgotPasswordResponse, LoginResponse, RegisterResponse } from "./authResponse";
 
 export type AuthState = {
   authenticated: boolean | null;
@@ -25,6 +25,12 @@ export interface AuthProps {
     c_password: string
   ) => Promise<RegisterResponse | ErrorResponse>;
   verifyEmail: (email: string, code: string) => Promise<RegisterResponse | ErrorResponse>;
+  resetPassword: (
+    email: string,
+    password: string,
+    password_confirmation: string,
+    password_reset_code: string
+  ) => Promise<ForgotPasswordResponse | ErrorResponse>;
   onLogIn: (email: string, password: string) => Promise<LoginResponse | ErrorResponse>;
   onLogOut: () => void;
   userRegistrationInfo: UserRegistrationInfo;
