@@ -1,19 +1,19 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from "react";
 
-import { api, SecureStoreDelete, SecureStoreGet, SecureStoreSave } from '@/services';
-import { clearToken, setToken } from '@/services/api/client';
-import { AuthProps, AuthState } from '@/types/authContext';
+import { api, SecureStoreDelete, SecureStoreGet, SecureStoreSave } from "@/services";
+import { clearToken, setToken } from "@/services/api/client";
+import { AuthProps, AuthState } from "@/types/authContext";
 import {
   ApiResponse,
-  AuthSuccessData,
-  ForgotPasswordResponse,
+  SuccessData,
   LoginResponse,
   RegisterResponse,
   ResetPasswordResponse,
-  VerifyOtpResponse,
-} from '@/types/authResponse'; 
+  VerifyEmailResponse,
+  SendVerifyEmailCodeResponse,
+} from "@/types/authResponse";
 
-import { GENDER_MAPPING } from '@/constants/auth';
+import { Gender, GENDER_MAPPING } from "@/constants/gender";
 
 const AuthContext = createContext<AuthProps>({});
 
@@ -23,31 +23,32 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authState, setAuthState] = useState<AuthState>({
-    authenticated: null,
+    authenticated: false,
     token: null,
-    emailVerificationToken: undefined,
   });
 
   const [userRegistrationInfo, setUserRegistrationInfo] = useState({
-    name: '',
+    name: "",
     birth_date: new Date(),
-    gender: '',
-    email: '',
-    password: '',
-    c_password: '',
+    gender: "",
+    email: "",
+    password: "",
+    c_password: "",
     step: 1,
   });
 
   useEffect(() => {
     const initializeAuth = async () => {
-      const token = await SecureStoreGet('token');
+      const authInfo = await SecureStoreGet("authInfo");
+      const parsedAuthInfo = JSON.parse(authInfo ?? "");
 
-      if (token) {
+      if (parsedAuthInfo) {
+        const { token, authenticated } = parsedAuthInfo;
         setToken(token);
 
         setAuthState({
           token,
-          authenticated: true,
+          authenticated,
         });
       }
     };
@@ -61,60 +62,51 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     password: string,
     c_password: string,
     birth_date: Date,
-    gender: string,
-  ): Promise<ApiResponse<AuthSuccessData>> => {
+    gender: Gender
+  ): Promise<ApiResponse<SuccessData>> => {
     try {
       if (!(birth_date instanceof Date)) {
-        console.error('birth_date is not a Date object:', birth_date);
-        return { success: false, message: 'Invalid birth date format.' };
+        console.error("birth_date is not a Date object:", birth_date);
+        return { success: false, message: "Invalid birth date format." };
       }
-      const formattedBirthDate = birth_date.toISOString().split('T')[0];
-
-      const genderId = GENDER_MAPPING[gender];
-
-      if (typeof genderId === 'undefined') {
-        console.error('Invalid gender string received:', gender);
-        return { success: false, message: 'Invalid gender selected.' };
-      }
+      const formattedBirthDate = birth_date.toISOString().split("T")[0];
 
       const requestPayload = {
         name,
         email,
         password,
         c_password,
-        gender: genderId,
+        gender: GENDER_MAPPING[gender],
         dob: formattedBirthDate,
       };
 
-      const response = await api.post<RegisterResponse>('/register', requestPayload);
+      const response = await api.post<RegisterResponse>("/register", requestPayload);
+
+      console.log(response.data?.email_verification_code);
 
       if (response.success && response.data?.success?.token) {
-        // response.data.success is now AuthSuccessData
         const user = response.data.success;
-        const emailVerificationToken = response.data.email_verification_token;
 
         setAuthState({
           ...authState,
           token: user.token,
-          emailVerificationToken: emailVerificationToken,
         });
-
         setToken(user.token);
-        await SecureStoreSave('token', user.token);
 
-        // Return the consistent ApiResponse structure
+        const authInfo = { token: user.token, authenticated: false };
+        await SecureStoreSave("authInfo", JSON.stringify(authInfo));
+
         return {
           success: true,
-          message: response.data.message || 'Registration successful!',
+          message: response.data.message || "Registration successful!",
           data: user,
-          email_verification_token: emailVerificationToken,
         };
       } else {
-        return { success: false, message: response.data?.message || 'Signup failed' };
+        return { success: false, message: response.data?.message || "Signup failed" };
       }
     } catch (error) {
-      console.error('Error during registration:', error);
-      return { success: false, message: 'Signup failed' };
+      console.error("Error during registration:", error);
+      return { success: false, message: "Signup failed" };
     }
   };
 
@@ -124,36 +116,38 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     try {
-      const response = await api.post<VerifyOtpResponse>('/verify-email', {
+      const response = await api.post<VerifyEmailResponse>("/verify-email", {
         email,
         email_verification_code: Number(otpCode),
       });
 
       if (response.success) {
         setAuthState((prev) => ({ ...prev, emailVerificationToken: undefined }));
-        return { success: true, message: response.message ?? 'Email verified successfully!' };
+        const authInfo = { token: authState.token, authenticated: true };
+        await SecureStoreSave("authInfo", JSON.stringify(authInfo));
+
+        return { success: true, message: response.message ?? "Email verified successfully!" };
       } else {
-        return { success: false, message: response.message ?? 'Email verification failed' };
+        return { success: false, message: response.message ?? "Email verification failed" };
       }
     } catch (error) {
-      console.error('Error during email verification:', error);
-      return { success: false, message: 'Email verification failed' };
+      console.error("Error during email verification:", error);
+      return { success: false, message: "Email verification failed" };
     }
   };
 
-  const logIn = async (email: string, password: string): Promise<ApiResponse<AuthSuccessData>> => {
+  const logIn = async (email: string, password: string): Promise<ApiResponse<SuccessData>> => {
     const message = validateEmail(email);
     if (message) {
       return { success: false, message };
     }
     try {
-      const response = await api.post<LoginResponse>('/login', {
+      const response = await api.post<LoginResponse>("/login", {
         email,
         password,
       });
 
       if (response.success && response.data?.data?.token) {
-        // Access nested data.data as per your previous LoginResponse
         const user = response.data.data;
 
         setAuthState({
@@ -162,28 +156,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         });
 
         setToken(user.token);
-        await SecureStoreSave('token', user.token);
+        const authInfo = { token: user.token, authenticated: true };
+        await SecureStoreSave("authInfo", JSON.stringify(authInfo));
 
         return { success: true, message: response.data.message, data: user };
       } else {
-        return { success: false, message: response.data?.message || 'Email or password is not correct' };
+        return { success: false, message: response.data?.message || "Email or password is not correct" };
       }
     } catch (error) {
       console.error(error);
-      return { success: false, message: 'Something goes wrong' };
+      return { success: false, message: "Something goes wrong" };
     }
   };
 
   const validateEmail = (authEmail: string) => {
     if (authEmail.length === 0) return "Email can't be blank";
-    if (authEmail.length < 6) return 'Email must be at least 6 characters';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(authEmail))
-      return 'Email must be a valid email address (ex. john@mail.com)';
-    return '';
+    if (authEmail.length < 6) return "Email must be at least 6 characters";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(authEmail)) return "Email must be a valid email address (ex. john@mail.com)";
+    return "";
   };
 
   const logOut = async () => {
-    await SecureStoreDelete('token');
+    await SecureStoreDelete("authInfo");
     clearToken();
 
     setAuthState({
@@ -192,49 +186,46 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const forgotPassword = async (email: string): Promise<ApiResponse<undefined>> => {
-    try {
-      const response = await api.post<ForgotPasswordResponse>('/forgot-password', { email });
-      if (response.success) {
-        return { success: true, message: response.message || 'Password reset code sent!' };
-      } else {
-        return { success: false, message: response.message || 'Failed to send password reset code.' };
-      }
-    } catch (error) {
-      console.error('Forgot password error:', error);
-      return { success: false, message: 'Failed to send password reset code.' };
-    }
-  };
-
-  const verifyForgotPasswordOtp = async (email: string, otp: string): Promise<ApiResponse<undefined>> => {
-    try {
-      const response = await api.post<VerifyOtpResponse>('/verify-email', { email, otp });
-      if (response.success) {
-        return { success: true, message: response.message || 'OTP verified successfully!' };
-      } else {
-        return { success: false, message: response.message || 'Invalid or expired OTP.' };
-      }
-    } catch (error) {
-      console.error('Verify forgot password OTP error:', error);
-      return { success: false, message: 'Invalid or expired OTP.' };
-    }
-  };
-
   const resetPassword = async (
     email: string,
-    otp: string,
     password: string,
-  ): Promise<ApiResponse<undefined>> => {
+    password_confirmation: string,
+    password_reset_code: string
+  ): Promise<ApiResponse<ResetPasswordResponse>> => {
     try {
-      const response = await api.post<ResetPasswordResponse>('/reset-password', { email, otp, password });
-      if (response.success) {
-        return { success: true, message: response.message || 'Password reset successfully!' };
+      const response = await api.post<ResetPasswordResponse>("/reset-password", {
+        email,
+        password,
+        password_confirmation,
+        password_reset_code,
+      });
+      if (response.success && response.data?.token) {
+        const authInfo = { token: response.data.token, authenticated: true };
+        await SecureStoreSave("authInfo", JSON.stringify(authInfo));
+        setToken(response.data?.token);
+        return { success: true, message: response.message || "Password reset successfully!" };
       } else {
-        return { success: false, message: response.message || 'Failed to reset password.' };
+        return { success: false, message: response.message || "Failed to reset password." };
       }
     } catch (error) {
-      console.error('Reset password error:', error);
-      return { success: false, message: 'Failed to reset password.' };
+      console.error("Reset password error:", error);
+      return { success: false, message: "Failed to reset password." };
+    }
+  };
+
+  const sendVerifyEmailCode = async (email: string): Promise<ApiResponse<SendVerifyEmailCodeResponse>> => {
+    try {
+      const response = await api.post<ResetPasswordResponse>("/send-verify-email", {
+        email,
+      });
+      if (response.success && response.data?.token) {
+        return { success: true, message: response.message || "Verification code sent successfully!" };
+      } else {
+        return { success: false, message: response.message || "Failed to send verification code." };
+      }
+    } catch (error) {
+      console.error("Send verify email code error:", error);
+      return { success: false, message: "Failed to send verification code." };
     }
   };
 
@@ -243,9 +234,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     onLogIn: logIn,
     onLogOut: logOut,
     verifyEmail,
-    forgotPassword,
-    verifyForgotPasswordOtp,
     resetPassword,
+    sendVerifyEmailCode,
     authState,
     setAuthState,
     userRegistrationInfo,

@@ -1,20 +1,20 @@
-import ArrowDownIcon from '@assets/icons/arrow-down.svg';
-import ArrowUpIcon from '@assets/icons/arrow-up.svg';
-import React, { useState } from 'react';
-import { FlatList, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
+import ArrowDownIcon from "@assets/icons/arrow-down.svg";
+import ArrowUpIcon from "@assets/icons/arrow-up.svg";
+import React, { useEffect, useState } from "react";
+import { FlatList, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 
-import { ThemedStyle } from '@/theme';
-import { useAppTheme } from '@/utils/useAppTheme';
+import { ThemedStyle } from "@/theme";
+import { useAppTheme } from "@/utils/useAppTheme";
 
-import { ListItem } from './ListItem';
-import { Text } from './Text';
+import { ListItem } from "./ListItem";
+import { Text } from "./Text";
 
-interface CustomDropbarProps {
+interface CustomDropbarProps<T = string> {
   title?: string;
   placeholder: string;
-  options: string[];
-  value: string;
-  onChange: (text: string) => void;
+  options: T[];
+  value: T;
+  onChange: (value: T) => void;
 }
 
 export default function CustomDropbar({ title, placeholder, options, value, onChange }: CustomDropbarProps) {
@@ -24,6 +24,10 @@ export default function CustomDropbar({ title, placeholder, options, value, onCh
     themed,
     theme: { colors },
   } = useAppTheme();
+
+  useEffect(() => {
+    setSelected(value);
+  }, [value]);
 
   const toggleDropdown = () => setIsOpened((prev) => !prev);
   const onSelect = (item: string) => {
@@ -109,9 +113,9 @@ const $dropdownList: ThemedStyle<ViewStyle> = ({ colors }) => ({
 });
 
 const $row: ViewStyle = {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
 };
 
 const $placeholderText: ThemedStyle<TextStyle> = ({ colors }) => ({

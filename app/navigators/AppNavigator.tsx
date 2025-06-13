@@ -60,7 +60,7 @@ export const AppNavigator = observer(function AppNavigator(props: NavigationProp
     <ThemeProvider value={{ themeScheme, setThemeContextOverride }}>
       <NavigationContainer ref={navigationRef} theme={navigationTheme} {...props}>
         {authState?.authenticated ? <AppStack /> : <AuthNavigator />}
- {/* <AppStack />  */}
+        {/* <AppStack />  */}
       </NavigationContainer>
     </ThemeProvider>
   );

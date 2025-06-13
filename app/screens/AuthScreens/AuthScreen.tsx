@@ -9,7 +9,7 @@ import { AuthStackParamList } from '@/navigators/AuthNavigator';
 import type { ThemedStyle } from '@/theme';
 import { useAppTheme } from '@/utils/useAppTheme';
 
-type AuthScreenProps = NativeStackScreenProps<AuthStackParamList, 'Auth'>;
+export type AuthScreenProps = NativeStackScreenProps<AuthStackParamList, 'Auth'>;
 
 export const AuthScreen: FC<AuthScreenProps> = () => {
   const { themed } = useAppTheme();
